@@ -137,13 +137,13 @@ dialog.fl-dialog[open] { animation: pop-in .5s cubic-bezier(.22,1,.36,1) both; }
    ========================================================================= */
 const STORE = {
   name: 'Floweraaine',
-  upiId: 'owner@upi',
-  whatsappNumber: '919999999999',
-  whatsappDisplay: '+91 99999 99999',
+  upiId: '7306238385@upi', // UPDATED: Phase 1 UPI requirement
+  whatsappNumber: '917306238385', // Updated to match your required number
+  whatsappDisplay: '+91 73062 38385',
   email: 'hello@floweraaine.com',
   hours: 'Mon – Sat, 10am – 8pm IST',
-  city: 'Handcrafted in India · Pan-India delivery',
-  adminPassword: 'admin123',
+  city: 'Handcrafted in India · Kerala Delivery Only',
+  adminPassword: 'admin',
 }
 
 const HERO_IMAGE = '/product images/bmw-hamper.jpg'
@@ -157,6 +157,7 @@ const products = [
     description: 'A 1 Rupee placeholder item to safely test the UPI checkout and UTR verification flow.',
     features: ['Live Payment Test', '1 INR Transaction', 'Instant Verification'],
     category: 'standard',
+    isTrending: false,
   },
   {
     id: 1,
@@ -166,6 +167,7 @@ const products = [
     description: 'A premium gifting experience featuring a detailed BMW M4 model, presented in a luxury box with scented blue roses.',
     features: ['Includes Car Model', 'Scented Roses', 'Luxury Gift Box'],
     category: 'customizable',
+    isTrending: true, // Phase 1: Trending flag
   },
   {
     id: 2,
@@ -175,6 +177,7 @@ const products = [
     description: 'Highly detailed interactive model. Available in Blue, Black, and Red.',
     features: ['2-Door, Bonnet & Dickey Opening', 'Horn & Sound Effects', 'Headlight Blinking'],
     category: 'standard',
+    isTrending: false,
   },
   {
     id: 3,
@@ -184,6 +187,7 @@ const products = [
     description: 'Classic Porsche model beautifully mounted on a customized display frame.',
     features: ['2-Door Opening Feature', 'Detailed Interior', 'Display Frame Included'],
     category: 'standard',
+    isTrending: true, // Phase 1: Trending flag
   },
   {
     id: 4,
@@ -193,6 +197,7 @@ const products = [
     description: 'A unique mini-trolley suitcase packed with chocolates, personal photos, and premium gifts.',
     features: ['Mini Trolley Case', 'Custom Photos', 'Assorted Chocolates'],
     category: 'customizable',
+    isTrending: false,
   },
   {
     id: 5,
@@ -202,6 +207,7 @@ const products = [
     description: 'Tailor-made gift hampers for birthdays, anniversaries, and special occasions.',
     features: ['Custom Chocolates', 'Personalized Messages', 'Elegant Packaging'],
     category: 'customizable',
+    isTrending: true, // Phase 1: Trending flag
   },
   {
     id: 6,
@@ -211,14 +217,15 @@ const products = [
     description: 'A minimalist 4x4 inch frame perfect for showcasing your favorite memories.',
     features: ['4x4 Inch Size', 'Premium White Finish', 'Ready to Gift'],
     category: 'standard',
+    isTrending: false,
   },
 ]
 
 const seedReviews = [
-  { id: 'r1', name: 'Ananya R.', city: 'Bengaluru', rating: 5, title: 'He opened it twice just to smell the roses', body: 'The BMW hamper was beyond what the photos promised. Every detail felt considered — the ribbon, the card, even the way the roses were arranged around the model.', product: 'BMW M4 Hamper Box', verified: true },
-  { id: 'r2', name: 'Karthik S.', city: 'Chennai', rating: 5, title: 'A keepsake, not a gift', body: 'Ordered the trolly hamper with our photos for my parents’ anniversary. Mum cried. Payment via UPI was effortless and the team kept me updated on WhatsApp.', product: 'Trolly Hamper', verified: true },
-  { id: 'r3', name: 'Meera P.', city: 'Pune', rating: 4, title: 'Beautifully finished frame', body: 'The Porsche frame now sits on my partner’s desk. The interior detail is lovely. Delivery took a day longer than expected but was worth the wait.', product: 'Porsche 911 Frame', verified: true },
-  { id: 'r4', name: 'Rohan D.', city: 'Mumbai', rating: 5, title: 'They took my vague idea and made it perfect', body: 'I only knew I wanted dark chocolates and a handwritten note. The custom hamper they composed felt genuinely personal.', product: 'Customized Hampers', verified: true },
+  { id: 'r1', name: 'Ananya R.', city: 'Kerala', rating: 5, title: 'He opened it twice just to smell the roses', body: 'The BMW hamper was beyond what the photos promised. Every detail felt considered — the ribbon, the card, even the way the roses were arranged around the model.', product: 'BMW M4 Hamper Box', verified: true },
+  { id: 'r2', name: 'Karthik S.', city: 'Kerala', rating: 5, title: 'A keepsake, not a gift', body: 'Ordered the trolly hamper with our photos for my parents’ anniversary. Mum cried. Payment via UPI was effortless and the team kept me updated on WhatsApp.', product: 'Trolly Hamper', verified: true },
+  { id: 'r3', name: 'Meera P.', city: 'Kerala', rating: 4, title: 'Beautifully finished frame', body: 'The Porsche frame now sits on my partner’s desk. The interior detail is lovely. Delivery took a day longer than expected but was worth the wait.', product: 'Porsche 911 Frame', verified: true },
+  { id: 'r4', name: 'Rohan D.', city: 'Kerala', rating: 5, title: 'They took my vague idea and made it perfect', body: 'I only knew I wanted dark chocolates and a handwritten note. The custom hamper they composed felt genuinely personal.', product: 'Customized Hampers', verified: true },
 ]
 
 const OCCASIONS = ['Birthday', 'Anniversary', 'Proposal', 'Graduation', 'Just Because']
@@ -440,8 +447,10 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6">
       <nav aria-label="Primary" className="glass mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full py-2 pl-6 pr-2">
-        <button type="button" onClick={() => navigate('home')} className="fl-serif text-2xl italic tracking-wide transition-opacity hover:opacity-70">
-          Floweraaine<span className="text-[var(--primary)]">.</span>
+        <button type="button" onClick={() => navigate('home')} className="fl-serif text-2xl italic tracking-wide transition-opacity hover:opacity-70 flex items-center gap-2">
+          {/* Phase 1: Small Logo added to Navbar */}
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-[var(--primary)] to-[var(--accent)] text-xs font-bold text-white not-italic">F</span>
+          Floweraaine<span className="text-[var(--primary)]">.</span><sup className="text-[10px] not-italic">®</sup>
         </button>
         <div className="hidden items-center gap-1 md:flex">
           <button type="button" onClick={() => navigate('home', 'collection')} className={linkClass}>Collection</button>
@@ -475,7 +484,7 @@ const pillars = [
   { icon: Sparkles, label: 'Handmade to order' },
   { icon: Gift, label: 'Personalized keepsakes' },
   { icon: ShieldCheck, label: 'Secure UPI payments' },
-  { icon: Truck, label: 'Pan-India delivery' },
+  { icon: Truck, label: 'Kerala-wide delivery' }, // Phase 1 update
 ]
 
 function Hero() {
@@ -571,7 +580,14 @@ function ProductCard({ product }) {
           {customizable ? 'Customizable' : 'Ready to gift'}
         </span>
 
-        <span aria-hidden="true" className="glass absolute right-4 top-4 flex h-10 w-10 -translate-y-2 items-center justify-center rounded-full opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+        {/* Phase 1: Trending Badge added here */}
+        {product.isTrending && (
+          <span className="absolute top-4 right-4 z-10 flex items-center gap-1 rounded-full bg-[var(--danger)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg animate-pulse">
+            <Star className="h-3 w-3" fill="currentColor" /> Hot
+          </span>
+        )}
+
+        <span aria-hidden="true" className="glass absolute right-4 top-16 flex h-10 w-10 -translate-y-2 items-center justify-center rounded-full opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
           <ArrowUpRight className="h-4 w-4" />
         </span>
 
@@ -905,7 +921,7 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
 
   async function copyUpi() {
     try {
-      await navigator.clipboard.writeText(STORE.upiId)
+      await navigator.clipboard.writeText(STORE.upiId.replace('@upi', ''))
       setCopied(true)
       setTimeout(() => setCopied(false), 1800)
     } catch {}
@@ -923,7 +939,7 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
     e.preventDefault()
     const clean = txnId.replace(/\s/g, '')
     if (!/^\d{12}$/.test(clean)) {
-      setError('Enter the 12-digit UTR number shown on your UPI receipt.')
+      setError('Enter the exactly 12-digit UTR number shown on your UPI receipt.')
       return
     }
     if (!receiptUrl) {
@@ -947,7 +963,7 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
         <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-fg)]">Ref · {orderId}</p>
 
         <div className="mt-4 flex w-full items-center justify-between gap-2 rounded-full border py-1 pl-4 pr-1">
-          <span className="truncate font-mono text-xs">{STORE.upiId}</span>
+          <span className="truncate font-mono text-xs">{STORE.upiId.replace('@upi', '')}</span>
           <button type="button" onClick={copyUpi} className="fl-hover flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-medium">
             {copied ? <Check className="h-3 w-3" aria-hidden="true" /> : <Copy className="h-3 w-3" aria-hidden="true" />}
             {copied ? 'Copied' : 'Copy'}
@@ -977,9 +993,9 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
               id={inputId}
               inputMode="numeric"
               autoComplete="off"
-              maxLength={14}
+              maxLength={12}
               value={txnId}
-              onChange={(e) => setTxnId(e.target.value.replace(/[^\d\s]/g, ''))}
+              onChange={(e) => setTxnId(e.target.value.replace(/[^\d]/g, ''))}
               placeholder="e.g. 412345678901"
               aria-invalid={!!error}
               aria-describedby={error ? errorId : undefined}
@@ -1131,7 +1147,9 @@ function OrderConfirmed({ order, onReview }) {
 function CheckoutView() {
   const { selectedProduct: product, quantity, customization, navigate, addOrder, pushToast } = useStore()
   const [orderId] = useState(makeOrderId)
-  const [details, setDetails] = useState({ name: '', email: '', phone: '', address: '' })
+  
+  // Phase 1: Added 'state' to details object
+  const [details, setDetails] = useState({ name: '', email: '', phone: '', address: '', state: 'Kerala' })
   const [policyAgreed, setPolicyAgreed] = useState(false)
   const [status, setStatus] = useState('idle')
   const [order, setOrder] = useState(null)
@@ -1139,6 +1157,7 @@ function CheckoutView() {
   const emailId = useId()
   const phoneId = useId()
   const addressId = useId()
+  const stateId = useId()
 
   if (!product) {
     return (
@@ -1156,11 +1175,15 @@ function CheckoutView() {
   }
 
   const total = product.price * quantity
+  
+  // Phase 1: Strict 10-digit mobile lock and Kerala requirement
   const detailsValid =
     details.name.trim().length > 1 &&
     /^\S+@\S+\.\S+$/.test(details.email) &&
-    /^[6-9]\d{9}$/.test(details.phone.replace(/\D/g, '').slice(-10)) &&
+    /^\d{10}$/.test(details.phone) && 
+    details.state === 'Kerala' &&
     details.address.trim().length > 8
+
   const paymentUnlocked = detailsValid && policyAgreed
   const message = `${buildOrderMessage(product, quantity, customization)}\n• Order ref: ${orderId}`
 
@@ -1200,13 +1223,32 @@ function CheckoutView() {
                     <input id={nameId} autoComplete="name" value={details.name} onChange={update('name')} className="fl-input" placeholder="Priya Sharma" />
                   </div>
                   <div>
-                    <label htmlFor={phoneId} className="fl-label">Mobile</label>
-                    <input id={phoneId} type="tel" autoComplete="tel" value={details.phone} onChange={update('phone')} className="fl-input" placeholder="98765 43210" />
+                    <label htmlFor={phoneId} className="fl-label">Mobile (10 Digits)</label>
+                    <input 
+                      id={phoneId} 
+                      type="tel" 
+                      maxLength={10} 
+                      autoComplete="tel" 
+                      value={details.phone} 
+                      onChange={(e) => setDetails(d => ({ ...d, phone: e.target.value.replace(/\D/g, '') }))} 
+                      className="fl-input" 
+                      placeholder="e.g. 9876543210" 
+                    />
                   </div>
                   <div className="sm:col-span-2">
                     <label htmlFor={emailId} className="fl-label">Email for order updates</label>
                     <input id={emailId} type="email" autoComplete="email" value={details.email} onChange={update('email')} className="fl-input" placeholder="you@example.com" />
                   </div>
+                  
+                  {/* Phase 1: Kerala Only Shipping Lock */}
+                  <div className="sm:col-span-2">
+                    <label htmlFor={stateId} className="fl-label">Shipping State</label>
+                    <select id={stateId} value={details.state} onChange={update('state')} className="fl-input appearance-none bg-[var(--muted)]">
+                      <option value="Kerala">Kerala (Exclusive)</option>
+                    </select>
+                    <p className="mt-1 text-xs text-[var(--danger)]">* We currently only fulfill orders within Kerala.</p>
+                  </div>
+
                   <div className="sm:col-span-2">
                     <label htmlFor={addressId} className="fl-label">Delivery address</label>
                     <textarea id={addressId} rows={2} autoComplete="street-address" value={details.address} onChange={update('address')} className="fl-input resize-none" placeholder="House, street, city, PIN code" />
@@ -1664,15 +1706,21 @@ function Footer() {
     <footer className="mt-20 border-t">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
+          
+          {/* Phase 1: About Us Section & Logo added here */}
           <div>
-            <p className="fl-serif text-4xl italic">Floweraaine<span className="text-[var(--primary)]">.</span></p>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-[var(--muted-fg)]">
-              An artisan gifting studio crafting hampers and keepsakes by hand, one order at a time.
+            <p className="fl-serif text-4xl italic flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-[var(--primary)] to-[var(--accent)] text-lg font-bold text-white not-italic shadow-lg">F</span>
+              Floweraaine<span className="text-[var(--primary)]">.</span><sup className="text-sm not-italic -ml-1">®</sup>
+            </p>
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-[var(--muted-fg)]">
+              <strong className="text-[var(--fg)]">About Us:</strong> Floweraaine is an indie artisan gifting studio born from a passion for making every occasion unforgettable. Created and engineered by Omith Thilakan, we specialize in bespoke, hand-crafted hampers and keepsakes, tailored to your personal vision.
             </p>
             <button type="button" onClick={() => setContactOpen(true)} className="glass glass-sheen mt-6 rounded-full px-6 py-3 text-sm font-medium">
               Contact &amp; support
             </button>
           </div>
+
           <nav aria-label="Footer">
             <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-fg)]">Explore</p>
             <ul className="mt-4 space-y-2.5 text-sm">
@@ -1700,7 +1748,7 @@ function Footer() {
           </div>
         </div>
         <div className="mt-16 flex flex-col justify-between gap-2 border-t pt-6 text-xs text-[var(--muted-fg)] sm:flex-row">
-          <p>© {new Date().getFullYear()} Floweraaine. Crafted with care in India.</p>
+          <p>© {new Date().getFullYear()} Floweraaine. Designed & Developed by Omith Thilakan.</p>
           <p>UPI payments only · No cash on delivery</p>
         </div>
       </div>
