@@ -21,6 +21,9 @@ import {
   formatINR, whatsappLink, mailtoLink, buildOrderMessage, hideBrokenImage 
 } from './data.js'
 
+// --- API CONFIGURATION FOR LOCAL & LIVE RENDER ---
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
+
 /* =========================================================================
    STORE (React context)
    ========================================================================= */
@@ -1082,7 +1085,7 @@ function CheckoutView() {
       formData.append('image', receiptFile)
 
       try {
-        const uploadRes = await fetch('http://localhost:5000/api/upload', {
+        const uploadRes = await fetch(`${API_BASE}/api/upload`, {
           method: 'POST',
           body: formData, 
         })
@@ -1112,7 +1115,7 @@ function CheckoutView() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderPayload)
@@ -1433,7 +1436,7 @@ function AdminView() {
     setLoading(true)
 
     try {
-      const res = await fetch('http://localhost:5000/api/admin/login', {
+      const res = await fetch(`${API_BASE}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password })
@@ -1458,7 +1461,7 @@ function AdminView() {
   useEffect(() => {
     if (authed) {
       setLoading(true)
-      fetch('http://localhost:5000/api/orders', {
+      fetch(`${API_BASE}/api/orders`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
         .then(res => res.json())
@@ -1481,7 +1484,7 @@ function AdminView() {
 
   const handleApprove = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/orders/${id}/approve`, { 
+      const res = await fetch(`${API_BASE}/api/orders/${id}/approve`, { 
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       })
