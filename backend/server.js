@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import orderRoutes from './routes/orderRoutes.js';
+import productRoutes from './routes/productRoutes.js'; // <-- ADDED FOR PHASE 4
 
 // Setup for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -56,7 +57,7 @@ app.post('/api/admin/login', (req, res) => {
   return res.status(401).json({ success: false, message: 'Invalid credentials' });
 });
 
-// --- NEW: Cloudinary Image Upload Endpoint ---
+// Cloudinary Image Upload Endpoint
 app.post('/api/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'No file uploaded.' });
@@ -69,7 +70,6 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
         console.error('Cloudinary error:', error);
         return res.status(500).json({ success: false, message: 'Image upload failed.' });
       }
-      // Send the secure, permanent URL back to React
       res.json({ success: true, url: result.secure_url });
     }
   );
@@ -79,6 +79,7 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 
 // API Routes
 app.use('/api/orders', orderRoutes);
+app.use('/api/products', productRoutes); // <-- ADDED FOR PHASE 4
 
 // PRODUCTION SETUP: Serve React Frontend
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
