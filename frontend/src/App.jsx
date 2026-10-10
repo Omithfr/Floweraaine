@@ -7,248 +7,19 @@ import {
   FileImage
 } from 'lucide-react'
 
-/* =========================================================================
-   STYLES — theme tokens, liquid glass, animations
-   ========================================================================= */
-const GLOBAL_CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+// Swiper imports (Standard sliding)
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, Autoplay } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
-:root {
-  color-scheme: light;
-  --bg: oklch(0.975 0.008 75);
-  --fg: oklch(0.22 0.02 30);
-  --muted: oklch(0.945 0.012 70);
-  --muted-fg: oklch(0.5 0.02 40);
-  --primary: oklch(0.42 0.11 15);
-  --primary-fg: oklch(0.98 0.008 75);
-  --accent: oklch(0.74 0.09 78);
-  --success: oklch(0.55 0.11 155);
-  --whatsapp: oklch(0.66 0.17 150);
-  --danger: oklch(0.577 0.2 27);
-  --border: oklch(0.9 0.012 70);
-  --glass-tint: oklch(1 0 0 / 0.55);
-  --glass-edge: oklch(1 0 0 / 0.7);
-  --glass-shadow: oklch(0.3 0.05 30 / 0.08);
-  --blob-1: rgba(244, 164, 186, 0.35);
-  --blob-2: rgba(253, 224, 137, 0.3);
-  --blob-3: rgba(244, 114, 182, 0.25);
-}
-.dark {
-  color-scheme: dark;
-  --bg: oklch(0.155 0.012 30);
-  --fg: oklch(0.95 0.01 75);
-  --muted: oklch(0.24 0.014 30);
-  --muted-fg: oklch(0.7 0.015 60);
-  --primary: oklch(0.8 0.08 15);
-  --primary-fg: oklch(0.18 0.02 25);
-  --accent: oklch(0.8 0.08 80);
-  --success: oklch(0.72 0.12 155);
-  --whatsapp: oklch(0.7 0.17 150);
-  --danger: oklch(0.65 0.19 25);
-  --border: oklch(1 0 0 / 0.1);
-  --glass-tint: oklch(0.22 0.015 30 / 0.5);
-  --glass-edge: oklch(1 0 0 / 0.12);
-  --glass-shadow: oklch(0 0 0 / 0.4);
-  --blob-1: rgba(136, 19, 55, 0.35);
-  --blob-2: rgba(180, 83, 9, 0.25);
-  --blob-3: rgba(157, 23, 77, 0.3);
-}
-
-*, *::before, *::after { border-color: var(--border); }
-html { scroll-behavior: smooth; }
-html, body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  transition: background-color .6s ease, color .6s ease;
-}
-::selection { background: color-mix(in oklch, var(--primary) 25%, transparent); }
-
-.fl-serif { font-family: 'Cormorant Garamond', ui-serif, Georgia, serif; }
-.fl-hover:hover { background: color-mix(in oklch, var(--fg) 6%, transparent); }
-.fl-soft-primary { background: color-mix(in oklch, var(--primary) 10%, transparent); }
-.fl-soft-success { background: color-mix(in oklch, var(--success) 12%, transparent); }
-.fl-soft-accent { background: color-mix(in oklch, var(--accent) 14%, transparent); border-color: color-mix(in oklch, var(--accent) 40%, transparent); }
-.fl-soft-wa { background: color-mix(in oklch, var(--whatsapp) 12%, transparent); }
-.fl-soft-wa:hover { background: color-mix(in oklch, var(--whatsapp) 20%, transparent); }
-.fl-shadow-primary { box-shadow: 0 12px 30px -10px color-mix(in oklch, var(--primary) 45%, transparent); transition: box-shadow .3s ease, gap .3s ease, transform .3s ease; }
-.fl-shadow-primary:hover { box-shadow: 0 18px 40px -10px color-mix(in oklch, var(--primary) 60%, transparent); }
-.fl-shadow-wa { box-shadow: 0 14px 34px -10px color-mix(in oklch, var(--whatsapp) 55%, transparent); }
-.fl-input {
-  width: 100%; border-radius: .75rem; border: 1px solid var(--border);
-  background: color-mix(in oklch, var(--bg) 60%, transparent); color: var(--fg);
-  padding: .75rem 1rem; font-size: .875rem; outline: none; transition: border-color .2s, box-shadow .2s;
-}
-.fl-input::placeholder { color: color-mix(in oklch, var(--muted-fg) 75%, transparent); }
-.fl-input:focus { border-color: color-mix(in oklch, var(--primary) 50%, transparent); box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 12%, transparent); }
-.fl-input:disabled { opacity: .6; }
-.fl-label { display: block; margin-bottom: .5rem; font-size: .7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .18em; color: var(--muted-fg); }
-
-.glass {
-  background: var(--glass-tint);
-  backdrop-filter: blur(22px) saturate(170%);
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  border: 1px solid var(--glass-edge);
-  box-shadow: inset 0 1px 0 0 var(--glass-edge), 0 20px 50px -20px var(--glass-shadow);
-}
-.glass-solid { background: color-mix(in oklch, var(--bg) 82%, transparent); }
-.glass-sheen { position: relative; overflow: hidden; isolation: isolate; }
-.glass-sheen::after {
-  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(115deg, transparent 30%, oklch(1 0 0 / .35) 48%, transparent 62%);
-  transform: translateX(-120%); transition: transform 1.1s cubic-bezier(.22,1,.36,1);
-}
-.glass-sheen:hover::after { transform: translateX(120%); }
-
-@keyframes liquid-drift {
-  0%,100% { transform: translate(0,0) scale(1); border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%; }
-  33% { transform: translate(6%,-8%) scale(1.08); border-radius: 58% 42% 38% 62% / 55% 38% 62% 45%; }
-  66% { transform: translate(-5%,6%) scale(.95); border-radius: 38% 62% 54% 46% / 62% 55% 45% 38%; }
-}
-@keyframes rise-in { from { opacity: 0; transform: translateY(24px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
-@keyframes pop-in { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: none; } }
-@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes ping-soft { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.7); opacity: 0; } }
-
-.animate-liquid { animation: liquid-drift 18s ease-in-out infinite; }
-.animate-rise { animation: rise-in .9s cubic-bezier(.22,1,.36,1) both; }
-.animate-pop { animation: pop-in .5s cubic-bezier(.22,1,.36,1) both; }
-.animate-fade { animation: fade-in .7s ease both; }
-.animate-ping-soft { animation: ping-soft 2.4s cubic-bezier(0,0,.2,1) infinite; }
-
-.reveal { opacity: 0; transform: translateY(28px); filter: blur(4px); transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1), filter .9s cubic-bezier(.22,1,.36,1); }
-.reveal.is-visible { opacity: 1; transform: none; filter: none; }
-
-dialog.fl-dialog::backdrop { background: rgb(0 0 0 / .4); backdrop-filter: blur(4px); }
-dialog.fl-dialog[open] { animation: pop-in .5s cubic-bezier(.22,1,.36,1) both; }
-
-::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-  .reveal { opacity: 1; transform: none; filter: none; }
-}
-`
-
-/* =========================================================================
-   DATA
-   ========================================================================= */
-const STORE = {
-  name: 'Floweraaine',
-  upiId: '7306238385@upi', // UPDATED: Phase 1 UPI requirement
-  whatsappNumber: '917306238385', // Updated to match your required number
-  whatsappDisplay: '+91 73062 38385',
-  email: 'hello@floweraaine.com',
-  hours: 'Mon – Sat, 10am – 8pm IST',
-  city: 'Handcrafted in India · Kerala Delivery Only',
-  adminPassword: 'admin',
-}
-
-const HERO_IMAGE = '/product images/bmw-hamper.jpg'
-
-const products = [
-  {
-    id: 0,
-    name: 'Test Payment (1 Rs)',
-    price: 1,
-    image: '/product images/4x4-frame.jpg', 
-    description: 'A 1 Rupee placeholder item to safely test the UPI checkout and UTR verification flow.',
-    features: ['Live Payment Test', '1 INR Transaction', 'Instant Verification'],
-    category: 'standard',
-    isTrending: false,
-  },
-  {
-    id: 1,
-    name: 'BMW M4 Hamper Box',
-    price: 2000,
-    image: '/product images/bmw-hamper.jpg',
-    description: 'A premium gifting experience featuring a detailed BMW M4 model, presented in a luxury box with scented blue roses.',
-    features: ['Includes Car Model', 'Scented Roses', 'Luxury Gift Box'],
-    category: 'customizable',
-    isTrending: true, // Phase 1: Trending flag
-  },
-  {
-    id: 2,
-    name: 'BMW M4 Diecast Model',
-    price: 1580,
-    image: '/product images/bmw-m4.jpg',
-    description: 'Highly detailed interactive model. Available in Blue, Black, and Red.',
-    features: ['2-Door, Bonnet & Dickey Opening', 'Horn & Sound Effects', 'Headlight Blinking'],
-    category: 'standard',
-    isTrending: false,
-  },
-  {
-    id: 3,
-    name: 'Porsche 911 Frame',
-    price: 730,
-    image: '/product images/porsche.jpg',
-    description: 'Classic Porsche model beautifully mounted on a customized display frame.',
-    features: ['2-Door Opening Feature', 'Detailed Interior', 'Display Frame Included'],
-    category: 'standard',
-    isTrending: true, // Phase 1: Trending flag
-  },
-  {
-    id: 4,
-    name: 'Trolly Hamper',
-    price: 2500,
-    image: '/product images/trolly-hamper.jpg',
-    description: 'A unique mini-trolley suitcase packed with chocolates, personal photos, and premium gifts.',
-    features: ['Mini Trolley Case', 'Custom Photos', 'Assorted Chocolates'],
-    category: 'customizable',
-    isTrending: false,
-  },
-  {
-    id: 5,
-    name: 'Customized Hampers',
-    price: 1499,
-    image: '/product images/custom-hamper1.jpg',
-    description: 'Tailor-made gift hampers for birthdays, anniversaries, and special occasions.',
-    features: ['Custom Chocolates', 'Personalized Messages', 'Elegant Packaging'],
-    category: 'customizable',
-    isTrending: true, // Phase 1: Trending flag
-  },
-  {
-    id: 6,
-    name: '4 x 4 Photo Frame',
-    price: 160,
-    image: '/product images/4x4-frame.jpg',
-    description: 'A minimalist 4x4 inch frame perfect for showcasing your favorite memories.',
-    features: ['4x4 Inch Size', 'Premium White Finish', 'Ready to Gift'],
-    category: 'standard',
-    isTrending: false,
-  },
-]
-
-const seedReviews = [
-  { id: 'r1', name: 'Ananya R.', city: 'Kerala', rating: 5, title: 'He opened it twice just to smell the roses', body: 'The BMW hamper was beyond what the photos promised. Every detail felt considered — the ribbon, the card, even the way the roses were arranged around the model.', product: 'BMW M4 Hamper Box', verified: true },
-  { id: 'r2', name: 'Karthik S.', city: 'Kerala', rating: 5, title: 'A keepsake, not a gift', body: 'Ordered the trolly hamper with our photos for my parents’ anniversary. Mum cried. Payment via UPI was effortless and the team kept me updated on WhatsApp.', product: 'Trolly Hamper', verified: true },
-  { id: 'r3', name: 'Meera P.', city: 'Kerala', rating: 4, title: 'Beautifully finished frame', body: 'The Porsche frame now sits on my partner’s desk. The interior detail is lovely. Delivery took a day longer than expected but was worth the wait.', product: 'Porsche 911 Frame', verified: true },
-  { id: 'r4', name: 'Rohan D.', city: 'Kerala', rating: 5, title: 'They took my vague idea and made it perfect', body: 'I only knew I wanted dark chocolates and a handwritten note. The custom hamper they composed felt genuinely personal.', product: 'Customized Hampers', verified: true },
-]
-
-const OCCASIONS = ['Birthday', 'Anniversary', 'Proposal', 'Graduation', 'Just Because']
-
-const formatINR = (value) =>
-  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value)
-
-const whatsappLink = (message) => `https://wa.me/${STORE.whatsappNumber}?text=${encodeURIComponent(message)}`
-const mailtoLink = (subject, body) =>
-  `mailto:${STORE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-
-function buildOrderMessage(product, quantity, c) {
-  return [
-    `Hi Floweraaine! I'd like to order:`,
-    `• ${product.name} × ${quantity} (${formatINR(product.price * quantity)})`,
-    c.occasion && `• Occasion: ${c.occasion}`,
-    c.text && `• Personalized text: "${c.text}"`,
-    c.note && `• Gift note: "${c.note}"`,
-    c.photoName && `• I have a reference photo (${c.photoName}) to share.`,
-  ].filter(Boolean).join('\n')
-}
-
-const hideBrokenImage = (e) => { e.currentTarget.style.opacity = '0' }
+// Import our logo and isolated data
+import logoImg from './assets/Floweraaine logo.jpg'
+import { 
+  STORE, HERO_IMAGE, products, seedReviews, OCCASIONS, 
+  formatINR, whatsappLink, mailtoLink, buildOrderMessage, hideBrokenImage 
+} from './data.js'
 
 /* =========================================================================
    STORE (React context)
@@ -292,9 +63,9 @@ function StoreProvider({ children }) {
     setToasts((prev) => [...prev, { ...toast, id }])
     window.setTimeout(() => dismissToast(id), 6500)
   }, [dismissToast])
-  
+
   const addOrder = useCallback((order) => setOrders((prev) => [order, ...prev]), [])
-  
+
   const approveOrder = useCallback((orderId) => {
     setOrders((prev) => prev.map(o => o.id === orderId ? { ...o, status: 'verified' } : o))
     pushToast({ kind: 'success', title: 'Order Approved', body: `Order ${orderId} has been verified.` })
@@ -304,7 +75,7 @@ function StoreProvider({ children }) {
 
   const value = useMemo(() => ({
     view, navigate, selectedProduct, selectProduct, customization, setCustomization, quantity, setQuantity,
-    orders, addOrder, approveOrder, lastVerifiedOrder: orders.find(o => o.status === 'verified') ?? null, 
+    orders, addOrder, approveOrder, lastVerifiedOrder: orders.find(o => o.status === 'verified') ?? null,
     reviews, addReview, contactOpen, setContactOpen, toasts, pushToast, dismissToast,
   }), [view, navigate, selectedProduct, selectProduct, customization, setCustomization, quantity, setQuantity,
     orders, addOrder, approveOrder, reviews, addReview, contactOpen, toasts, pushToast, dismissToast])
@@ -319,7 +90,7 @@ function useStore() {
 }
 
 /* =========================================================================
-   PRIMITIVES
+   PRIMITIVES & INTERACTIVE BACKGROUND
    ========================================================================= */
 function Reveal({ children, className = '', delay = 0, as: Tag = 'div', ...rest }) {
   const ref = useRef(null)
@@ -352,8 +123,27 @@ function Eyebrow({ children }) {
 }
 
 function LiquidBackground() {
+  const [mouse, setMouse] = useState({ x: 50, y: 50 })
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const x = (e.clientX / window.innerWidth) * 100
+      const y = (e.clientY / window.innerHeight) * 100
+      setMouse({ x, y })
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden opacity-90">
+      <div
+        className="absolute inset-0 transition-opacity duration-500 ease-out"
+        style={{
+          background: `radial-gradient(circle 650px at ${mouse.x}% ${mouse.y}%, var(--blob-3), transparent 75%)`,
+          opacity: 0.65
+        }}
+      />
       <div className="animate-liquid absolute -left-[10%] -top-[10%] h-[45vw] w-[45vw] blur-3xl" style={{ background: 'var(--blob-1)' }} />
       <div className="animate-liquid absolute -right-[12%] top-[20%] h-[40vw] w-[40vw] blur-3xl" style={{ background: 'var(--blob-2)', animationDelay: '-6s' }} />
       <div className="animate-liquid absolute bottom-[-15%] left-[30%] h-[38vw] w-[38vw] blur-3xl" style={{ background: 'var(--blob-3)', animationDelay: '-12s' }} />
@@ -377,7 +167,7 @@ function Stars({ value, size = 'h-4 w-4' }) {
 }
 
 /* =========================================================================
-   THEME TOGGLE — liquid circular reveal via View Transitions API
+   THEME TOGGLE
    ========================================================================= */
 function getInitialTheme() {
   if (typeof window === 'undefined') return false
@@ -447,10 +237,12 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6">
       <nav aria-label="Primary" className="glass mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full py-2 pl-6 pr-2">
-        <button type="button" onClick={() => navigate('home')} className="fl-serif text-2xl italic tracking-wide transition-opacity hover:opacity-70 flex items-center gap-2">
-          {/* Phase 1: Small Logo added to Navbar */}
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-[var(--primary)] to-[var(--accent)] text-xs font-bold text-white not-italic">F</span>
-          Floweraaine<span className="text-[var(--primary)]">.</span><sup className="text-[10px] not-italic">®</sup>
+        <button type="button" onClick={() => navigate('home')} className="transition-opacity hover:opacity-70 flex items-center">
+          <img 
+            src={logoImg} 
+            alt="Floweraaine" 
+            className="h-24 sm:h-32 w-auto object-contain mix-blend-multiply dark:invert -my-10 -ml-4" 
+          />
         </button>
         <div className="hidden items-center gap-1 md:flex">
           <button type="button" onClick={() => navigate('home', 'collection')} className={linkClass}>Collection</button>
@@ -478,21 +270,23 @@ function Navbar() {
 }
 
 /* =========================================================================
-   HERO
+   HERO (With Trending Sliding Interface & Grid Blowout Fix)
    ========================================================================= */
 const pillars = [
   { icon: Sparkles, label: 'Handmade to order' },
   { icon: Gift, label: 'Personalized keepsakes' },
   { icon: ShieldCheck, label: 'Secure UPI payments' },
-  { icon: Truck, label: 'Kerala-wide delivery' }, // Phase 1 update
+  { icon: Truck, label: 'Kerala-wide delivery' },
 ]
 
 function Hero() {
-  const { navigate } = useStore()
+  const { navigate, selectProduct } = useStore()
+  const trendingProducts = products.filter((p) => p.isTrending)
+
   return (
     <section className="mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 md:pt-20">
       <div className="grid items-center gap-12 md:grid-cols-[1.05fr_1fr] md:gap-16">
-        <div className="animate-rise">
+        <div className="animate-rise min-w-0">
           <Eyebrow>Artisan gifting studio</Eyebrow>
           <h1 className="fl-serif mt-6 text-balance text-5xl font-medium leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
             Gifts, composed <em className="text-[var(--primary)]">by hand.</em>
@@ -515,25 +309,44 @@ function Hero() {
           </div>
           <div className="mt-10 flex items-center gap-3 text-sm text-[var(--muted-fg)]">
             <Stars value={5} />
-            <span><strong className="font-medium text-[var(--fg)]">4.9</strong> from verified customers</span>
+            <span><strong className="font-medium text-[var(--fg)]">4.9</strong> from verified Kerala customers</span>
           </div>
         </div>
 
-        <div className="animate-rise relative" style={{ animationDelay: '150ms' }}>
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-[var(--muted)] shadow-2xl">
-            <img
-              src={HERO_IMAGE}
-              alt="Ivory gift boxes with silk ribbons and blush roses in soft morning light"
-              className="h-full w-full object-cover transition-transform duration-[2000ms] hover:scale-105"
-              onError={(e) => { e.currentTarget.src = products[1].image }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+        <div className="animate-rise relative min-w-0" style={{ animationDelay: '150ms' }}>
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] bg-[var(--muted)] shadow-2xl group">
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              autoplay={{ delay: 3500, disableOnInteraction: false }}
+              pagination={{ clickable: true, dynamicBullets: true }}
+              className="h-full w-full"
+            >
+              {trendingProducts.map((p) => (
+                <SwiperSlide key={p.id} className="relative h-full w-full cursor-pointer" onClick={() => selectProduct(p)}>
+                  <img
+                    src={p.image || p.images?.[0]}
+                    alt={p.name}
+                    className="h-full w-full object-cover transition-transform duration-[4000ms] group-hover:scale-105"
+                    onError={hideBrokenImage}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                  
+                  {/* Text overlap fix */}
+                  <div className="absolute bottom-16 left-6 right-6 z-10 text-left">
+                    <span className="mb-2 inline-flex items-center gap-1 rounded-full bg-[var(--danger)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
+                      <Star className="h-3 w-3" fill="currentColor" /> Trending
+                    </span>
+                    <h3 className="fl-serif text-2xl text-white">{p.name}</h3>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
-          <div className="glass absolute -bottom-6 -left-4 max-w-[220px] rounded-2xl p-4 sm:-left-8">
+          <div className="glass absolute -bottom-6 -left-4 max-w-[220px] rounded-2xl p-4 sm:-left-8 z-20">
             <p className="fl-serif text-lg italic leading-snug">“Every ribbon is tied by hand.”</p>
             <p className="mt-1 text-xs text-[var(--muted-fg)]">— The Floweraaine studio</p>
           </div>
-          <div className="glass absolute -right-2 top-6 flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium sm:-right-6">
+          <div className="glass absolute -right-2 top-6 flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium sm:-right-6 z-20">
             <span className="h-2 w-2 rounded-full bg-[var(--success)]" aria-hidden="true" />
             Taking orders this week
           </div>
@@ -553,7 +366,7 @@ function Hero() {
 }
 
 /* =========================================================================
-   PRODUCT CARD + GALLERY
+   PRODUCT CARD & DIVIDED SECTIONS GALLERY
    ========================================================================= */
 function ProductCard({ product }) {
   const { selectProduct } = useStore()
@@ -580,7 +393,6 @@ function ProductCard({ product }) {
           {customizable ? 'Customizable' : 'Ready to gift'}
         </span>
 
-        {/* Phase 1: Trending Badge added here */}
         {product.isTrending && (
           <span className="absolute top-4 right-4 z-10 flex items-center gap-1 rounded-full bg-[var(--danger)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg animate-pulse">
             <Star className="h-3 w-3" fill="currentColor" /> Hot
@@ -622,17 +434,22 @@ function ProductCard({ product }) {
 
 const filters = [
   { value: 'all', label: 'All pieces' },
-  { value: 'customizable', label: 'Custom hampers' },
-  { value: 'standard', label: 'Ready to gift' },
+  { value: 'cars', label: 'Cars & Frames' },
+  { value: 'hampers', label: 'Luxury Hampers' },
+  { value: 'floral', label: 'Artisan Florals' }
 ]
 
 function ProductGallery() {
   const [filter, setFilter] = useState('all')
-  const visible = filter === 'all' ? products : products.filter((p) => p.category === filter)
   const activeIndex = filters.findIndex((f) => f.value === filter)
+
+  const automotiveProducts = products.filter((p) => p.type === 'cars')
+  const hamperProducts = products.filter((p) => p.type === 'hampers')
+  const floralProducts = products.filter((p) => p.type === 'floral')
 
   return (
     <section id="collection" className="mx-auto max-w-6xl scroll-mt-28 px-4 py-20 sm:px-6">
+      
       <Reveal className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
         <div className="max-w-xl">
           <Eyebrow>The collection</Eyebrow>
@@ -640,15 +457,15 @@ function ProductGallery() {
             Pieces made to be <em className="text-[var(--primary)]">remembered.</em>
           </h2>
           <p className="mt-4 leading-relaxed text-[var(--muted-fg)]">
-            Choose a ready-to-gift piece, or a hamper we finish with your photographs, names and message.
+            Explore our handcrafted selection. Choose an entire section or browse by specific product types below.
           </p>
         </div>
 
-        <div role="tablist" aria-label="Filter products" className="glass relative grid grid-cols-3 rounded-full p-1">
+        <div role="tablist" aria-label="Filter products" className="glass relative grid grid-cols-4 rounded-full p-1 overflow-x-auto">
           <span
             aria-hidden="true"
             className="absolute inset-y-1 left-1 rounded-full bg-[var(--fg)] transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)]"
-            style={{ width: 'calc((100% - 0.5rem) / 3)', transform: `translateX(${activeIndex * 100}%)` }}
+            style={{ width: 'calc((100% - 0.5rem) / 4)', transform: `translateX(${activeIndex * 100}%)` }}
           />
           {filters.map((f) => (
             <button
@@ -665,13 +482,53 @@ function ProductGallery() {
         </div>
       </Reveal>
 
-      <div key={filter} className="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-        {visible.map((product, i) => (
-          <div key={product.id} className="animate-rise" style={{ animationDelay: `${i * 80}ms` }}>
-            <ProductCard product={product} />
+      {(filter === 'all' || filter === 'cars') && automotiveProducts.length > 0 && (
+        <div className="mt-20">
+          <div className="flex items-center gap-3 border-b border-[var(--border)] pb-4">
+            <Package className="h-6 w-6 text-[var(--primary)]" aria-hidden="true" />
+            <h3 className="fl-serif text-3xl">Cars & Frames</h3>
           </div>
-        ))}
-      </div>
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {automotiveProducts.map((product, i) => (
+              <Reveal key={product.id} delay={i * 50} className="h-full">
+                <ProductCard product={product} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(filter === 'all' || filter === 'hampers') && hamperProducts.length > 0 && (
+        <div className="mt-24">
+          <div className="flex items-center gap-3 border-b border-[var(--border)] pb-4">
+            <Gift className="h-6 w-6 text-[var(--primary)]" aria-hidden="true" />
+            <h3 className="fl-serif text-3xl">Luxury Hampers</h3>
+          </div>
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {hamperProducts.map((product, i) => (
+              <Reveal key={product.id} delay={i * 50} className="h-full">
+                <ProductCard product={product} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {(filter === 'all' || filter === 'floral') && floralProducts.length > 0 && (
+        <div className="mt-24">
+          <div className="flex items-center gap-3 border-b border-[var(--border)] pb-4">
+            <Sparkles className="h-6 w-6 text-[var(--primary)]" aria-hidden="true" />
+            <h3 className="fl-serif text-3xl">Artisan Florals</h3>
+          </div>
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {floralProducts.map((product, i) => (
+              <Reveal key={product.id} delay={i * 50} className="h-full">
+                <ProductCard product={product} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      )}
 
       <Reveal className="glass mt-24 grid gap-8 rounded-[2rem] p-8 md:grid-cols-[1.4fr_1fr] md:items-center md:p-12">
         <div id="bespoke" className="scroll-mt-32">
@@ -700,12 +557,13 @@ function ProductGallery() {
           </a>
         </div>
       </Reveal>
+
     </section>
   )
 }
 
 /* =========================================================================
-   CUSTOMIZE VIEW
+   CUSTOMIZE VIEW (With Multi-Image Swiper)
    ========================================================================= */
 function CustomizeView() {
   const { selectedProduct: product, customization, setCustomization, quantity, setQuantity, navigate } = useStore()
@@ -726,6 +584,7 @@ function CustomizeView() {
 
   const customizable = product.category === 'customizable'
   const message = buildOrderMessage(product, quantity, customization)
+  const productImages = Array.isArray(product.images) && product.images.length > 1 ? product.images : null
 
   function handlePhoto(file) {
     if (!file || !file.type.startsWith('image/') || file.size > 8 * 1024 * 1024) return
@@ -741,23 +600,50 @@ function CustomizeView() {
       </button>
 
       <div className="grid gap-10 md:grid-cols-2 md:gap-16">
-        <div className="animate-rise md:sticky md:top-28 md:self-start">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-[var(--muted)] shadow-2xl">
-            <img src={product.image} alt={product.name} onError={hideBrokenImage} className="h-full w-full object-cover" />
+        <div className="animate-rise md:sticky md:top-28 md:self-start min-w-0">
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] bg-[var(--muted)] shadow-2xl">
+            
+            {productImages ? (
+              <Swiper
+                modules={[Navigation, Pagination]}
+                navigation
+                pagination={{ clickable: true, dynamicBullets: true }}
+                className="h-full w-full !pb-0"
+              >
+                {productImages.map((imgSrc, idx) => (
+                  <SwiperSlide key={idx} className="h-full w-full">
+                    <img
+                      src={imgSrc}
+                      alt={`${product.name} perspective ${idx + 1}`}
+                      onError={hideBrokenImage}
+                      className="h-full w-full object-cover"
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            ) : (
+              <img
+                src={product.image}
+                alt={product.name}
+                onError={hideBrokenImage}
+                className="h-full w-full object-cover"
+              />
+            )}
+
             {customization.photoUrl && (
-              <div className="glass animate-pop absolute bottom-4 right-4 w-28 rotate-3 rounded-xl p-1.5">
+              <div className="glass animate-pop pointer-events-none absolute bottom-4 right-4 z-20 w-28 rotate-3 rounded-xl p-1.5">
                 <img src={customization.photoUrl} alt="Your uploaded reference" className="aspect-square w-full rounded-lg object-cover" />
               </div>
             )}
             {customization.text && (
-              <div className="glass fl-serif animate-fade absolute bottom-4 left-4 max-w-[60%] rounded-xl px-4 py-2 text-lg italic">
+              <div className="glass fl-serif animate-fade pointer-events-none absolute bottom-4 left-4 z-20 max-w-[60%] rounded-xl px-4 py-2 text-lg italic">
                 {customization.text}
               </div>
             )}
           </div>
         </div>
 
-        <div className="animate-rise" style={{ animationDelay: '120ms' }}>
+        <div className="animate-rise min-w-0" style={{ animationDelay: '120ms' }}>
           <Eyebrow>{customizable ? 'Customization studio' : 'Ready to gift'}</Eyebrow>
           <h1 className="fl-serif mt-4 text-balance text-4xl leading-tight sm:text-5xl">{product.name}</h1>
           <p className="mt-3 text-xl tabular-nums">{formatINR(product.price)}</p>
@@ -910,6 +796,7 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
   const [txnId, setTxnId] = useState('')
   const [receiptUrl, setReceiptUrl] = useState(null)
   const [receiptName, setReceiptName] = useState(null)
+  const [receiptFile, setReceiptFile] = useState(null)
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
   const inputId = useId()
@@ -932,6 +819,7 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
     if (receiptUrl) URL.revokeObjectURL(receiptUrl)
     setReceiptUrl(URL.createObjectURL(file))
     setReceiptName(file.name)
+    setReceiptFile(file)
     setError('')
   }
 
@@ -947,7 +835,7 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
       return
     }
     setError('')
-    onVerify({ txnId: clean, receiptUrl })
+    onVerify({ txnId: clean, receiptFile, receiptUrl })
   }
 
   return (
@@ -1019,6 +907,7 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
                     if (receiptUrl) URL.revokeObjectURL(receiptUrl)
                     setReceiptUrl(null)
                     setReceiptName(null)
+                    setReceiptFile(null)
                   }}
                   className="fl-hover rounded-full p-1 text-[var(--muted-fg)] hover:text-[var(--fg)]"
                   disabled={status !== 'idle'}
@@ -1147,8 +1036,6 @@ function OrderConfirmed({ order, onReview }) {
 function CheckoutView() {
   const { selectedProduct: product, quantity, customization, navigate, addOrder, pushToast } = useStore()
   const [orderId] = useState(makeOrderId)
-  
-  // Phase 1: Added 'state' to details object
   const [details, setDetails] = useState({ name: '', email: '', phone: '', address: '', state: 'Kerala' })
   const [policyAgreed, setPolicyAgreed] = useState(false)
   const [status, setStatus] = useState('idle')
@@ -1175,8 +1062,7 @@ function CheckoutView() {
   }
 
   const total = product.price * quantity
-  
-  // Phase 1: Strict 10-digit mobile lock and Kerala requirement
+
   const detailsValid =
     details.name.trim().length > 1 &&
     /^\S+@\S+\.\S+$/.test(details.email) &&
@@ -1185,20 +1071,70 @@ function CheckoutView() {
     details.address.trim().length > 8
 
   const paymentUnlocked = detailsValid && policyAgreed
-  const message = `${buildOrderMessage(product, quantity, customization)}\n• Order ref: ${orderId}`
 
-  function handleVerify({ txnId, receiptUrl }) {
+  async function handleVerify({ txnId, receiptFile, receiptUrl }) {
     setStatus('verifying')
-    window.setTimeout(() => {
-      const newOrder = {
-        id: orderId, product, quantity, total, customization, customer: details, txnId, receiptUrl,
-        status: 'pending', createdAt: new Date().toISOString(),
+
+    let finalReceiptUrl = receiptUrl
+
+    if (receiptFile) {
+      const formData = new FormData()
+      formData.append('image', receiptFile)
+
+      try {
+        const uploadRes = await fetch('http://localhost:5000/api/upload', {
+          method: 'POST',
+          body: formData, 
+        })
+        const uploadData = await uploadRes.json()
+        if (uploadData.success) {
+          finalReceiptUrl = uploadData.url 
+        }
+      } catch (err) {
+        console.error('Cloudinary receipt upload failed:', err)
       }
-      addOrder(newOrder)
-      setOrder(newOrder)
-      setStatus('verified') 
-      pushToast({ kind: 'info', title: 'Payment Submitted', body: `Order ${orderId} is pending studio verification.` })
-    }, 1500)
+    }
+
+    const orderPayload = {
+      orderId,
+      customer: details,
+      product: { name: product.name, price: product.price },
+      quantity,
+      total,
+      customization: {
+        occasion: customization.occasion,
+        text: customization.text,
+        note: customization.note,
+        photoName: customization.photoName
+      },
+      txnId,
+      receiptUrl: finalReceiptUrl
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload)
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        const dbOrder = { ...result.order, id: result.order.orderId } 
+        addOrder(dbOrder)
+        setOrder(dbOrder)
+        setStatus('verified') 
+        pushToast({ kind: 'success', title: 'Payment Submitted', body: `Order ${orderId} secured in database.` })
+      } else {
+        setStatus('idle')
+        pushToast({ kind: 'error', title: 'Order Failed', body: result.message })
+      }
+    } catch (error) {
+      console.error(error)
+      setStatus('idle')
+      pushToast({ kind: 'error', title: 'Connection Error', body: 'Failed to reach Floweraaine servers.' })
+    }
   }
 
   const update = (key) => (e) => setDetails((d) => ({ ...d, [key]: e.target.value }))
@@ -1232,7 +1168,7 @@ function CheckoutView() {
                       value={details.phone} 
                       onChange={(e) => setDetails(d => ({ ...d, phone: e.target.value.replace(/\D/g, '') }))} 
                       className="fl-input" 
-                      placeholder="e.g. 9876543210" 
+                      placeholder="e.g. 9745082273" 
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -1240,7 +1176,6 @@ function CheckoutView() {
                     <input id={emailId} type="email" autoComplete="email" value={details.email} onChange={update('email')} className="fl-input" placeholder="you@example.com" />
                   </div>
                   
-                  {/* Phase 1: Kerala Only Shipping Lock */}
                   <div className="sm:col-span-2">
                     <label htmlFor={stateId} className="fl-label">Shipping State</label>
                     <select id={stateId} value={details.state} onChange={update('state')} className="fl-input appearance-none bg-[var(--muted)]">
@@ -1321,7 +1256,7 @@ function CheckoutView() {
    REVIEWS
    ========================================================================= */
 function ReviewForm() {
-  const { lastVerifiedOrder: order, addReview, pushToast, navigate } = useStore()
+  const { lastVerifiedOrder: order, addReview, pushToast } = useStore()
   const [rating, setRating] = useState(5)
   const [hover, setHover] = useState(0)
   const [title, setTitle] = useState('')
@@ -1418,9 +1353,6 @@ function ReviewForm() {
           </span>
           <p className="fl-serif mt-5 text-2xl">Unlocks after verification</p>
           <p className="mt-2 max-w-xs text-sm text-[var(--muted-fg)]">Once your pending order is verified by our studio, you can share your experience here.</p>
-          <button type="button" onClick={() => navigate('home', 'collection')} className="mt-6 rounded-full bg-[var(--primary)] px-6 py-3 text-sm font-medium text-[var(--primary-fg)]">
-            Shop the collection
-          </button>
         </div>
       )}
     </div>
@@ -1482,26 +1414,94 @@ function ReviewsSection() {
 }
 
 /* =========================================================================
-   ADMIN VIEW
+   ADMIN VIEW (Secured with JWT)
    ========================================================================= */
 function AdminView() {
-  const { orders, approveOrder } = useStore()
+  const { pushToast } = useStore() 
+  const [dbOrders, setDbOrders] = useState([])
   const [password, setPassword] = useState('')
-  const [authed, setAuthed] = useState(false)
+  const [token, setToken] = useState(null)
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(false)
   const passwordId = useId()
+
+  const authed = !!token
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setError(false)
+    setLoading(true)
+
+    try {
+      const res = await fetch('http://localhost:5000/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      })
+      const data = await res.json()
+
+      if (data.success) {
+        setToken(data.token)
+        pushToast({ kind: 'success', title: 'Access Granted', body: 'Welcome to the studio dashboard.' })
+      } else {
+        setError(true)
+      }
+    } catch (err) {
+      console.error(err)
+      setError(true)
+      pushToast({ kind: 'error', title: 'Connection Error', body: 'Failed to reach Floweraaine servers.' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (authed) {
+      setLoading(true)
+      fetch('http://localhost:5000/api/orders', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            setDbOrders(data)
+          } else {
+            pushToast({ kind: 'error', title: 'Authentication Failed', body: data.message || 'Invalid token.' })
+            setToken(null)
+          }
+          setLoading(false)
+        })
+        .catch(err => {
+          console.error(err)
+          pushToast({ kind: 'error', title: 'Database Error', body: 'Failed to fetch orders.' })
+          setLoading(false)
+        })
+    }
+  }, [authed, token, pushToast])
+
+  const handleApprove = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/orders/${id}/approve`, { 
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const result = await res.json()
+      
+      if (result.success) {
+        setDbOrders(prev => prev.map(o => o.orderId === id ? { ...o, status: 'verified' } : o))
+        pushToast({ kind: 'success', title: 'Order Approved', body: `Order ${id} is verified in the database.` })
+      } else {
+        pushToast({ kind: 'error', title: 'Action Denied', body: result.message || 'Unauthorized.' })
+      }
+    } catch(e) {
+      pushToast({ kind: 'error', title: 'Update Failed', body: 'Could not approve order.' })
+    }
+  }
 
   if (!authed) {
     return (
       <div className="mx-auto max-w-md px-4 py-24">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            if (password === STORE.adminPassword) setAuthed(true)
-            else setError(true)
-          }}
-          className="glass animate-rise rounded-[2rem] p-8"
-        >
+        <form onSubmit={handleLogin} className="glass animate-rise rounded-[2rem] p-8">
           <span className="glass flex h-12 w-12 items-center justify-center rounded-full">
             <Lock className="h-5 w-5" aria-hidden="true" />
           </span>
@@ -1515,10 +1515,15 @@ function AdminView() {
             onChange={(e) => { setPassword(e.target.value); setError(false) }}
             className="fl-input"
             aria-invalid={error}
+            disabled={loading}
           />
-          {error && <p role="alert" className="mt-2 text-xs text-[var(--danger)]">Incorrect password.</p>}
-          <button type="submit" className="mt-6 w-full rounded-full bg-[var(--fg)] py-3.5 text-sm font-medium text-[var(--bg)]">
-            Access dashboard
+          {error && <p role="alert" className="mt-2 text-xs text-[var(--danger)]">Invalid credentials.</p>}
+          <button 
+            type="submit" 
+            disabled={loading || !password}
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[var(--fg)] py-3.5 text-sm font-medium text-[var(--bg)] disabled:opacity-50"
+          >
+            {loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : 'Access dashboard'}
           </button>
         </form>
       </div>
@@ -1527,13 +1532,27 @@ function AdminView() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <Eyebrow>Studio dashboard</Eyebrow>
-      <h1 className="fl-serif mt-4 text-4xl">Orders</h1>
+      <div className="flex items-end justify-between">
+        <div>
+          <Eyebrow>Studio dashboard</Eyebrow>
+          <div className="mt-4 flex items-center gap-3">
+            <h1 className="fl-serif text-4xl">Orders</h1>
+            {loading && <LoaderCircle className="h-5 w-5 animate-spin text-[var(--muted-fg)]" />}
+          </div>
+        </div>
+        <button 
+          onClick={() => setToken(null)} 
+          className="text-sm font-medium text-[var(--danger)] hover:underline"
+        >
+          Sign out
+        </button>
+      </div>
+      
       <div className="glass mt-8 overflow-x-auto rounded-[1.75rem]">
-        {orders.length === 0 ? (
+        {dbOrders.length === 0 && !loading ? (
           <div className="flex flex-col items-center px-6 py-20 text-center text-[var(--muted-fg)]">
             <Package className="h-8 w-8" aria-hidden="true" />
-            <p className="mt-4">No orders in this session yet.</p>
+            <p className="mt-4">No orders in the database yet.</p>
           </div>
         ) : (
           <table className="w-full text-left text-sm">
@@ -1545,9 +1564,9 @@ function AdminView() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((o) => (
-                <tr key={o.id} className="border-b last:border-0">
-                  <td className="px-6 py-4 font-mono text-xs">{o.id}</td>
+              {dbOrders.map((o) => (
+                <tr key={o._id || o.orderId} className="border-b last:border-0">
+                  <td className="px-6 py-4 font-mono text-xs">{o.orderId}</td>
                   <td className="px-6 py-4">
                     <p className="font-medium">{o.customer.name}</p>
                     <p className="text-xs text-[var(--muted-fg)]">{o.customer.phone}</p>
@@ -1565,7 +1584,7 @@ function AdminView() {
                   <td className="px-6 py-4">
                     {o.status === 'pending' ? (
                       <button 
-                        onClick={() => approveOrder(o.id)}
+                        onClick={() => handleApprove(o.orderId)}
                         className="rounded-full bg-[var(--fg)] px-4 py-2 text-xs font-medium text-[var(--bg)] transition-transform hover:scale-105 active:scale-95"
                       >
                         Approve Order
@@ -1706,13 +1725,17 @@ function Footer() {
     <footer className="mt-20 border-t">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
-          
-          {/* Phase 1: About Us Section & Logo added here */}
           <div>
-            <p className="fl-serif text-4xl italic flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-[var(--primary)] to-[var(--accent)] text-lg font-bold text-white not-italic shadow-lg">F</span>
-              Floweraaine<span className="text-[var(--primary)]">.</span><sup className="text-sm not-italic -ml-1">®</sup>
+            
+            {/* BIGGER LOGO FIX */}
+            <p className="flex items-center">
+              <img 
+                src={logoImg} 
+                alt="Floweraaine" 
+                className="h-32 sm:h-40 w-auto object-contain mix-blend-multiply dark:invert -my-14 -ml-6" 
+              />
             </p>
+
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-[var(--muted-fg)]">
               <strong className="text-[var(--fg)]">About Us:</strong> Floweraaine is an indie artisan gifting studio born from a passion for making every occasion unforgettable. Created and engineered by Omith Thilakan, we specialize in bespoke, hand-crafted hampers and keepsakes, tailored to your personal vision.
             </p>
@@ -1749,7 +1772,7 @@ function Footer() {
         </div>
         <div className="mt-16 flex flex-col justify-between gap-2 border-t pt-6 text-xs text-[var(--muted-fg)] sm:flex-row">
           <p>© {new Date().getFullYear()} Floweraaine. Designed & Developed by Omith Thilakan.</p>
-          <p>UPI payments only · No cash on delivery</p>
+          <p>UPI payments only · Delivery exclusively in Kerala</p>
         </div>
       </div>
     </footer>
@@ -1806,7 +1829,7 @@ function Toaster() {
 }
 
 /* =========================================================================
-   APP
+   APP ROOT
    ========================================================================= */
 function Views() {
   const { view } = useStore()
@@ -1829,7 +1852,6 @@ function Views() {
 export default function App() {
   return (
     <StoreProvider>
-      <style>{GLOBAL_CSS}</style>
       <div className="relative min-h-screen text-[var(--fg)]">
         <LiquidBackground />
         <Navbar />
