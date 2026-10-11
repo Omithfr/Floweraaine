@@ -19,7 +19,7 @@ export function StoreProvider({ children }) {
   const toastId = useRef(0);
 
   // --- DYNAMIC PRODUCTS STATE ---
-  // Falls back to data.js initially, then overrides with MongoDB data
+  // Falls back to data.js initially, then overrides/merges with MongoDB data
   const [products, setProducts] = useState(localProducts); 
 
   // --- CUSTOMER AUTHENTICATION STATE ---
@@ -31,15 +31,17 @@ export function StoreProvider({ children }) {
     } catch { return null; }
   });
 
-  // --- FETCH PRODUCTS FROM MONGODB ---
+  // --- FETCH PRODUCTS FROM MONGODB & MERGE ---
   const fetchProducts = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/api/products`);
       const data = await res.json();
-      if (data.success && data.products && data.products.length > 0) {
+      if (data.success && data.products) {
         // Map MongoDB _id to id so the frontend doesn't break
-        const mappedProducts = data.products.map(p => ({ ...p, id: p._id }));
-        setProducts(mappedProducts);
+        const dbProducts = data.products.map(p => ({ ...p, id: p._id }));
+        
+        // MERGE local data.js products WITH the new live database products
+        setProducts([...localProducts, ...dbProducts]);
       }
     } catch (err) {
       console.error('Failed to fetch catalog from database:', err);
