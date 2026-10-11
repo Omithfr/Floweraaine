@@ -4,7 +4,7 @@ import {
   ArrowLeft, ArrowRight, ArrowUpRight, BadgeCheck, Check, Clock, Copy, Gift, ImagePlus, Info,
   LoaderCircle, Lock, Mail, MailCheck, MapPin, MessageCircle, Minus, Moon, Package, Phone, Plus,
   Send, ShieldAlert, ShieldCheck, ShoppingBag, Smartphone, Sparkles, Star, Sun, Truck, X,
-  FileImage
+  FileImage, TrendingUp, BarChart3, PlusCircle
 } from 'lucide-react'
 
 // Swiper imports (Standard sliding)
@@ -14,7 +14,6 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
-// Import our logo, isolated data, and newly created Auth component
 import logoImg from './assets/Floweraaine logo.jpg'
 import CustomerAuth from './CustomerAuth.jsx'
 import { 
@@ -42,7 +41,7 @@ function StoreProvider({ children }) {
   const [toasts, setToasts] = useState([])
   const toastId = useRef(0)
 
-  // --- NEW: CUSTOMER AUTHENTICATION STATE ---
+  // --- CUSTOMER AUTHENTICATION STATE ---
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [customerUser, setCustomerUserState] = useState(() => {
     try {
@@ -90,19 +89,19 @@ function StoreProvider({ children }) {
 
   const addReview = useCallback((review) => setReviews((prev) => [review, ...prev]), [])
 
-  // --- NEW: LOGOUT HANDLER ---
+  // --- LOGOUT HANDLER ---
   const handleLogout = useCallback(() => {
     setCustomerUserState(null)
     localStorage.removeItem('customerToken')
     localStorage.removeItem('customerData')
     pushToast({ kind: 'info', title: 'Signed out', body: 'You have been successfully signed out.' })
-  }, [pushToast])
+    navigate('home')
+  }, [pushToast, navigate])
 
   const value = useMemo(() => ({
     view, navigate, selectedProduct, selectProduct, customization, setCustomization, quantity, setQuantity,
     orders, addOrder, approveOrder, lastVerifiedOrder: orders.find(o => o.status === 'verified') ?? null,
     reviews, addReview, contactOpen, setContactOpen, toasts, pushToast, dismissToast,
-    // Auth context exports
     customerUser, setCustomerUser, showAuthModal, setShowAuthModal, handleLogout
   }), [view, navigate, selectedProduct, selectProduct, customization, setCustomization, quantity, setQuantity,
     orders, addOrder, approveOrder, reviews, addReview, contactOpen, toasts, pushToast, dismissToast,
@@ -286,7 +285,7 @@ function Navbar() {
                 Hi, {customerUser.name.split(' ')[0]}
               </button>
               <div className="absolute right-0 top-full mt-3 w-48 bg-[var(--bg)] border border-[var(--border)] rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200 overflow-hidden z-50">
-                <button onClick={() => { /* Navigate to Orders View */ }} className="w-full text-left px-4 py-3 text-sm text-[var(--muted-fg)] hover:text-[var(--fg)] hover:bg-[var(--muted)] transition">
+                <button onClick={() => navigate('my-orders')} className="w-full text-left px-4 py-3 text-sm text-[var(--muted-fg)] hover:text-[var(--fg)] hover:bg-[var(--muted)] transition">
                   My Orders
                 </button>
                 <button 
@@ -328,7 +327,7 @@ function Navbar() {
 }
 
 /* =========================================================================
-   HERO (With Trending Sliding Interface & Grid Blowout Fix)
+   HERO
    ========================================================================= */
 const pillars = [
   { icon: Sparkles, label: 'Handmade to order' },
@@ -389,7 +388,6 @@ function Hero() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
                   
-                  {/* Text overlap fix */}
                   <div className="absolute bottom-16 left-6 right-6 z-10 text-left">
                     <span className="mb-2 inline-flex items-center gap-1 rounded-full bg-[var(--danger)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
                       <Star className="h-3 w-3" fill="currentColor" /> Trending
@@ -424,7 +422,7 @@ function Hero() {
 }
 
 /* =========================================================================
-   PRODUCT CARD & DIVIDED SECTIONS GALLERY
+   PRODUCT CARD & GALLERY
    ========================================================================= */
 function ProductCard({ product }) {
   const { selectProduct } = useStore()
@@ -615,13 +613,12 @@ function ProductGallery() {
           </a>
         </div>
       </Reveal>
-
     </section>
   )
 }
 
 /* =========================================================================
-   CUSTOMIZE VIEW (With Multi-Image Swiper)
+   CUSTOMIZE VIEW
    ========================================================================= */
 function CustomizeView() {
   const { selectedProduct: product, customization, setCustomization, quantity, setQuantity, navigate } = useStore()
@@ -660,32 +657,16 @@ function CustomizeView() {
       <div className="grid gap-10 md:grid-cols-2 md:gap-16">
         <div className="animate-rise md:sticky md:top-28 md:self-start min-w-0">
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] bg-[var(--muted)] shadow-2xl">
-            
             {productImages ? (
-              <Swiper
-                modules={[Navigation, Pagination]}
-                navigation
-                pagination={{ clickable: true, dynamicBullets: true }}
-                className="h-full w-full !pb-0"
-              >
+              <Swiper modules={[Navigation, Pagination]} navigation pagination={{ clickable: true, dynamicBullets: true }} className="h-full w-full !pb-0">
                 {productImages.map((imgSrc, idx) => (
                   <SwiperSlide key={idx} className="h-full w-full">
-                    <img
-                      src={imgSrc}
-                      alt={`${product.name} perspective ${idx + 1}`}
-                      onError={hideBrokenImage}
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={imgSrc} alt={`${product.name} perspective ${idx + 1}`} onError={hideBrokenImage} className="h-full w-full object-cover" />
                   </SwiperSlide>
                 ))}
               </Swiper>
             ) : (
-              <img
-                src={product.image}
-                alt={product.name}
-                onError={hideBrokenImage}
-                className="h-full w-full object-cover"
-              />
+              <img src={product.image} alt={product.name} onError={hideBrokenImage} className="h-full w-full object-cover" />
             )}
 
             {customization.photoUrl && (
@@ -723,10 +704,7 @@ function CustomizeView() {
                   const active = customization.occasion === o
                   return (
                     <button
-                      key={o}
-                      type="button"
-                      aria-pressed={active}
-                      onClick={() => setCustomization({ occasion: active ? '' : o })}
+                      key={o} type="button" aria-pressed={active} onClick={() => setCustomization({ occasion: active ? '' : o })}
                       className={`rounded-full px-4 py-2 text-sm transition-all duration-300 ${active ? 'bg-[var(--fg)] text-[var(--bg)]' : 'border text-[var(--muted-fg)] hover:text-[var(--fg)]'}`}
                     >
                       {o}
@@ -744,13 +722,8 @@ function CustomizeView() {
                     <span className="text-xs tabular-nums text-[var(--muted-fg)]">{customization.text.length}/40</span>
                   </div>
                   <input
-                    id={textId}
-                    type="text"
-                    maxLength={40}
-                    value={customization.text}
-                    onChange={(e) => setCustomization({ text: e.target.value })}
-                    className="fl-input"
-                    placeholder="A name, a date, a number plate…"
+                    id={textId} type="text" maxLength={40} value={customization.text} onChange={(e) => setCustomization({ text: e.target.value })}
+                    className="fl-input" placeholder="A name, a date, a number plate…"
                   />
                 </div>
 
@@ -759,15 +732,10 @@ function CustomizeView() {
                   {customization.photoName ? (
                     <div className="flex items-center justify-between gap-3 rounded-xl border px-4 py-3">
                       <span className="truncate text-sm">{customization.photoName}</span>
-                      <button
-                        type="button"
-                        aria-label="Remove photo"
-                        onClick={() => {
-                          if (customization.photoUrl) URL.revokeObjectURL(customization.photoUrl)
-                          setCustomization({ photoUrl: null, photoName: null })
-                        }}
-                        className="fl-hover rounded-full p-1 text-[var(--muted-fg)] hover:text-[var(--fg)]"
-                      >
+                      <button type="button" aria-label="Remove photo" onClick={() => {
+                        if (customization.photoUrl) URL.revokeObjectURL(customization.photoUrl)
+                        setCustomization({ photoUrl: null, photoName: null })
+                      }} className="fl-hover rounded-full p-1 text-[var(--muted-fg)] hover:text-[var(--fg)]">
                         <X className="h-4 w-4" />
                       </button>
                     </div>
@@ -788,13 +756,8 @@ function CustomizeView() {
                 Handwritten gift note <span className="normal-case tracking-normal">(optional)</span>
               </label>
               <textarea
-                id={noteId}
-                rows={3}
-                maxLength={200}
-                value={customization.note}
-                onChange={(e) => setCustomization({ note: e.target.value })}
-                className="fl-input resize-none"
-                placeholder="We'll write this by hand on a linen card."
+                id={noteId} rows={3} maxLength={200} value={customization.note} onChange={(e) => setCustomization({ note: e.target.value })}
+                className="fl-input resize-none" placeholder="We'll write this by hand on a linen card."
               />
             </div>
 
@@ -812,11 +775,7 @@ function CustomizeView() {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => navigate('checkout')}
-            className="fl-shadow-primary group mt-6 flex w-full items-center justify-between rounded-full bg-[var(--primary)] py-4 pl-7 pr-2 text-[var(--primary-fg)]"
-          >
+          <button type="button" onClick={() => navigate('checkout')} className="fl-shadow-primary group mt-6 flex w-full items-center justify-between rounded-full bg-[var(--primary)] py-4 pl-7 pr-2 text-[var(--primary-fg)]">
             <span className="font-medium">Continue to checkout · {formatINR(product.price * quantity)}</span>
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover:translate-x-0.5">
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -840,24 +799,21 @@ function CustomizeView() {
 }
 
 /* =========================================================================
-   UPI PAYMENT
+   UPI PAYMENT (STREAMLINED - NO UTR REQUIRED)
    ========================================================================= */
 const upiSteps = [
   'Scan the QR with any UPI app — GPay, PhonePe, Paytm or your bank app.',
   'Confirm the amount and payee name “Floweraaine” before paying.',
-  'Copy the 12-digit UTR / transaction ID from your payment receipt.',
-  'Upload a screenshot of the successful payment.',
-  'Submit below. We confirm on WhatsApp instantly.',
+  'Take a screenshot of the successful payment receipt.',
+  'Upload the screenshot below and submit.',
 ]
 
 function UpiPayment({ amount, orderId, status, onVerify }) {
-  const [txnId, setTxnId] = useState('')
   const [receiptUrl, setReceiptUrl] = useState(null)
   const [receiptName, setReceiptName] = useState(null)
   const [receiptFile, setReceiptFile] = useState(null)
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
-  const inputId = useId()
   const fileId = useId()
   const errorId = useId()
 
@@ -883,17 +839,12 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
 
   function submit(e) {
     e.preventDefault()
-    const clean = txnId.replace(/\s/g, '')
-    if (!/^\d{12}$/.test(clean)) {
-      setError('Enter the exactly 12-digit UTR number shown on your UPI receipt.')
-      return
-    }
     if (!receiptUrl) {
       setError('Please upload a screenshot of your successful payment receipt.')
       return
     }
     setError('')
-    onVerify({ txnId: clean, receiptFile, receiptUrl })
+    onVerify({ receiptFile, receiptUrl })
   }
 
   return (
@@ -933,23 +884,6 @@ function UpiPayment({ amount, orderId, status, onVerify }) {
         </ol>
 
         <form onSubmit={submit} className="mt-7 space-y-4" noValidate>
-          <div>
-            <label htmlFor={inputId} className="fl-label">12-Digit UPI Transaction ID (UTR)</label>
-            <input
-              id={inputId}
-              inputMode="numeric"
-              autoComplete="off"
-              maxLength={12}
-              value={txnId}
-              onChange={(e) => setTxnId(e.target.value.replace(/[^\d]/g, ''))}
-              placeholder="e.g. 412345678901"
-              aria-invalid={!!error}
-              aria-describedby={error ? errorId : undefined}
-              disabled={status !== 'idle'}
-              className="fl-input font-mono tracking-widest"
-            />
-          </div>
-
           <div>
             <span className="fl-label">Payment Screenshot</span>
             {receiptName ? (
@@ -1022,7 +956,7 @@ function Step({ number, title, done, locked, children }) {
 
 function OrderConfirmed({ order, onReview }) {
   const pending = order.status === 'pending'
-  const waMessage = `Hi Floweraaine! I have paid ${formatINR(order.total)} for Order ${order.id}. UTR: ${order.txnId}. Please find my payment screenshot attached.`
+  const waMessage = `Hi Floweraaine! I have paid ${formatINR(order.total)} for Order ${order.id}. Please find my payment screenshot attached.`
 
   return (
     <div className="animate-pop space-y-6">
@@ -1045,7 +979,6 @@ function OrderConfirmed({ order, onReview }) {
         <p className="mt-2 text-[var(--muted-fg)]">
           Order <strong className="font-medium text-[var(--fg)]">{order.id}</strong> {pending ? 'has been submitted. We are verifying your receipt.' : 'is confirmed. Our studio begins crafting today.'}
         </p>
-        <p className="mt-1 font-mono text-xs text-[var(--muted-fg)]">UTR {order.txnId}</p>
       </div>
 
       {pending ? (
@@ -1130,7 +1063,7 @@ function CheckoutView() {
 
   const paymentUnlocked = detailsValid && policyAgreed
 
-  async function handleVerify({ txnId, receiptFile, receiptUrl }) {
+  async function handleVerify({ receiptFile, receiptUrl }) {
     setStatus('verifying')
 
     let finalReceiptUrl = receiptUrl
@@ -1165,7 +1098,6 @@ function CheckoutView() {
         note: customization.note,
         photoName: customization.photoName
       },
-      txnId,
       receiptUrl: finalReceiptUrl
     }
 
@@ -1219,14 +1151,9 @@ function CheckoutView() {
                   <div>
                     <label htmlFor={phoneId} className="fl-label">Mobile (10 Digits)</label>
                     <input 
-                      id={phoneId} 
-                      type="tel" 
-                      maxLength={10} 
-                      autoComplete="tel" 
-                      value={details.phone} 
+                      id={phoneId} type="tel" maxLength={10} autoComplete="tel" value={details.phone} 
                       onChange={(e) => setDetails(d => ({ ...d, phone: e.target.value.replace(/\D/g, '') }))} 
-                      className="fl-input" 
-                      placeholder="e.g. 9745082273" 
+                      className="fl-input" placeholder="e.g. 9745082273" 
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -1252,11 +1179,8 @@ function CheckoutView() {
               <Step number={2} title="Payment policy" done={policyAgreed}>
                 <label className="fl-soft-accent flex cursor-pointer items-start gap-4 rounded-2xl border p-5">
                   <input
-                    type="checkbox"
-                    checked={policyAgreed}
-                    onChange={(e) => setPolicyAgreed(e.target.checked)}
-                    className="mt-0.5 h-5 w-5 shrink-0"
-                    style={{ accentColor: 'var(--primary)' }}
+                    type="checkbox" checked={policyAgreed} onChange={(e) => setPolicyAgreed(e.target.checked)}
+                    className="mt-0.5 h-5 w-5 shrink-0" style={{ accentColor: 'var(--primary)' }}
                   />
                   <span className="flex gap-3 text-sm leading-relaxed">
                     <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]" aria-hidden="true" />
@@ -1372,13 +1296,8 @@ function ReviewForm() {
                   const lit = n <= (hover || rating)
                   return (
                     <button
-                      key={n}
-                      type="button"
-                      role="radio"
-                      aria-checked={rating === n}
-                      aria-label={`${n} star${n > 1 ? 's' : ''}`}
-                      onClick={() => setRating(n)}
-                      onMouseEnter={() => setHover(n)}
+                      key={n} type="button" role="radio" aria-checked={rating === n} aria-label={`${n} star${n > 1 ? 's' : ''}`}
+                      onClick={() => setRating(n)} onMouseEnter={() => setHover(n)}
                       className="rounded-md p-0.5 transition-transform hover:scale-110"
                     >
                       <Star aria-hidden="true" className="h-7 w-7 transition-colors" style={lit ? { fill: 'var(--accent)', color: 'var(--accent)' } : { color: 'var(--border)' }} />
@@ -1472,7 +1391,7 @@ function ReviewsSection() {
 }
 
 /* =========================================================================
-   ADMIN VIEW (Secured with JWT)
+   ADMIN VIEW (SUPER ADMIN FEATURES)
    ========================================================================= */
 function AdminView() {
   const { pushToast } = useStore() 
@@ -1481,7 +1400,14 @@ function AdminView() {
   const [token, setToken] = useState(null)
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
-  const passwordId = useId()
+  
+  // Tab State: orders, products, analytics
+  const [adminTab, setAdminTab] = useState('orders')
+
+  // Product Upload State
+  const [prodForm, setProdForm] = useState({ name: '', price: '', description: '', category: 'ready', type: 'hampers', features: '', isTrending: false })
+  const [prodFile, setProdFile] = useState(null)
+  const [addingProduct, setAddingProduct] = useState(false)
 
   const authed = !!token
 
@@ -1489,7 +1415,6 @@ function AdminView() {
     e.preventDefault()
     setError(false)
     setLoading(true)
-
     try {
       const res = await fetch(`${API_BASE}/api/admin/login`, {
         method: 'POST',
@@ -1497,40 +1422,30 @@ function AdminView() {
         body: JSON.stringify({ password })
       })
       const data = await res.json()
-
       if (data.success) {
         setToken(data.token)
-        pushToast({ kind: 'success', title: 'Access Granted', body: 'Welcome to the studio dashboard.' })
-      } else {
-        setError(true)
-      }
+        pushToast({ kind: 'success', title: 'Access Granted', body: 'Welcome to the super admin dashboard.' })
+      } else { setError(true) }
     } catch (err) {
-      console.error(err)
       setError(true)
       pushToast({ kind: 'error', title: 'Connection Error', body: 'Failed to reach Floweraaine servers.' })
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
   useEffect(() => {
     if (authed) {
       setLoading(true)
-      fetch(`${API_BASE}/api/orders`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
+      fetch(`${API_BASE}/api/orders`, { headers: { 'Authorization': `Bearer ${token}` } })
         .then(res => res.json())
         .then(data => {
-          if (Array.isArray(data)) {
-            setDbOrders(data)
-          } else {
+          if (Array.isArray(data)) setDbOrders(data)
+          else {
             pushToast({ kind: 'error', title: 'Authentication Failed', body: data.message || 'Invalid token.' })
             setToken(null)
           }
           setLoading(false)
         })
         .catch(err => {
-          console.error(err)
           pushToast({ kind: 'error', title: 'Database Error', body: 'Failed to fetch orders.' })
           setLoading(false)
         })
@@ -1540,11 +1455,9 @@ function AdminView() {
   const handleApprove = async (id) => {
     try {
       const res = await fetch(`${API_BASE}/api/orders/${id}/approve`, { 
-        method: 'PATCH',
-        headers: { 'Authorization': `Bearer ${token}` }
+        method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` }
       })
       const result = await res.json()
-      
       if (result.success) {
         setDbOrders(prev => prev.map(o => o.orderId === id ? { ...o, status: 'verified' } : o))
         pushToast({ kind: 'success', title: 'Order Approved', body: `Order ${id} is verified in the database.` })
@@ -1556,6 +1469,49 @@ function AdminView() {
     }
   }
 
+  const handleAddProduct = async (e) => {
+    e.preventDefault()
+    setAddingProduct(true)
+    
+    let imageUrl = ''
+    if (prodFile) {
+      const fd = new FormData(); fd.append('image', prodFile);
+      try {
+        const upRes = await fetch(`${API_BASE}/api/upload`, { method: 'POST', body: fd })
+        const upData = await upRes.json()
+        if (upData.success) imageUrl = upData.url
+      } catch (err) {
+        pushToast({ kind: 'error', title: 'Upload Failed', body: 'Could not upload image to Cloudinary.' })
+      }
+    }
+
+    const featureArray = prodForm.features.split(',').map(s => s.trim()).filter(Boolean)
+    
+    try {
+      const res = await fetch(`${API_BASE}/api/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ ...prodForm, price: Number(prodForm.price), image: imageUrl, features: featureArray })
+      })
+      const data = await res.json()
+      
+      if (data.success) {
+        pushToast({ kind: 'success', title: 'Product Added', body: `${prodForm.name} is now live on the site.` })
+        setProdForm({ name: '', price: '', description: '', category: 'ready', type: 'hampers', features: '', isTrending: false })
+        setProdFile(null)
+      } else {
+        pushToast({ kind: 'error', title: 'Error', body: data.message })
+      }
+    } catch (err) {
+      pushToast({ kind: 'error', title: 'Server Error', body: 'Failed to add product.' })
+    } finally { setAddingProduct(false) }
+  }
+
+  // Analytics Calculations
+  const verifiedOrders = dbOrders.filter(o => o.status === 'verified')
+  const totalRevenue = verifiedOrders.reduce((sum, o) => sum + o.total, 0)
+  const pendingCount = dbOrders.length - verifiedOrders.length
+
   if (!authed) {
     return (
       <div className="mx-auto max-w-md px-4 py-24">
@@ -1564,23 +1520,14 @@ function AdminView() {
             <Lock className="h-5 w-5" aria-hidden="true" />
           </span>
           <h1 className="fl-serif mt-6 text-3xl">Partner login</h1>
-          <p className="mb-6 mt-1 text-sm text-[var(--muted-fg)]">Studio access to verify UPI orders.</p>
-          <label htmlFor={passwordId} className="fl-label">Password</label>
+          <p className="mb-6 mt-1 text-sm text-[var(--muted-fg)]">Super Admin Studio Access.</p>
+          <label className="fl-label">Password</label>
           <input
-            id={passwordId}
-            type="password"
-            value={password}
-            onChange={(e) => { setPassword(e.target.value); setError(false) }}
-            className="fl-input"
-            aria-invalid={error}
-            disabled={loading}
+            type="password" value={password} onChange={(e) => { setPassword(e.target.value); setError(false) }}
+            className="fl-input" aria-invalid={error} disabled={loading}
           />
           {error && <p role="alert" className="mt-2 text-xs text-[var(--danger)]">Invalid credentials.</p>}
-          <button 
-            type="submit" 
-            disabled={loading || !password}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[var(--fg)] py-3.5 text-sm font-medium text-[var(--bg)] disabled:opacity-50"
-          >
+          <button type="submit" disabled={loading || !password} className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[var(--fg)] py-3.5 text-sm font-medium text-[var(--bg)] disabled:opacity-50">
             {loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : 'Access dashboard'}
           </button>
         </form>
@@ -1590,73 +1537,256 @@ function AdminView() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <div className="flex items-end justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-          <Eyebrow>Studio dashboard</Eyebrow>
+          <Eyebrow>Super Admin</Eyebrow>
           <div className="mt-4 flex items-center gap-3">
-            <h1 className="fl-serif text-4xl">Orders</h1>
+            <h1 className="fl-serif text-4xl">Studio Dashboard</h1>
             {loading && <LoaderCircle className="h-5 w-5 animate-spin text-[var(--muted-fg)]" />}
           </div>
         </div>
-        <button 
-          onClick={() => setToken(null)} 
-          className="text-sm font-medium text-[var(--danger)] hover:underline"
-        >
+        <button onClick={() => setToken(null)} className="self-start sm:self-end text-sm font-medium text-[var(--danger)] hover:underline">
           Sign out
         </button>
       </div>
+
+      {/* Admin Sub-Navigation */}
+      <div className="flex gap-4 border-b border-white/10 pb-4 mb-8 overflow-x-auto">
+        <button onClick={() => setAdminTab('orders')} className={`whitespace-nowrap px-4 py-2 text-sm font-medium transition-colors ${adminTab === 'orders' ? 'text-[var(--fg)] border-b-2 border-[var(--fg)]' : 'text-[var(--muted-fg)] hover:text-[var(--fg)]'}`}>
+          Order Fulfillment
+        </button>
+        <button onClick={() => setAdminTab('products')} className={`whitespace-nowrap px-4 py-2 text-sm font-medium transition-colors ${adminTab === 'products' ? 'text-[var(--fg)] border-b-2 border-[var(--fg)]' : 'text-[var(--muted-fg)] hover:text-[var(--fg)]'}`}>
+          Add Product
+        </button>
+        <button onClick={() => setAdminTab('analytics')} className={`whitespace-nowrap px-4 py-2 text-sm font-medium transition-colors ${adminTab === 'analytics' ? 'text-[var(--fg)] border-b-2 border-[var(--fg)]' : 'text-[var(--muted-fg)] hover:text-[var(--fg)]'}`}>
+          Analytics
+        </button>
+      </div>
       
-      <div className="glass mt-8 overflow-x-auto rounded-[1.75rem]">
-        {dbOrders.length === 0 && !loading ? (
-          <div className="flex flex-col items-center px-6 py-20 text-center text-[var(--muted-fg)]">
-            <Package className="h-8 w-8" aria-hidden="true" />
-            <p className="mt-4">No orders in the database yet.</p>
+      {/* TAB 1: ORDERS */}
+      {adminTab === 'orders' && (
+        <div className="glass overflow-x-auto rounded-[1.75rem] animate-fade">
+          {dbOrders.length === 0 && !loading ? (
+            <div className="flex flex-col items-center px-6 py-20 text-center text-[var(--muted-fg)]">
+              <Package className="h-8 w-8" aria-hidden="true" />
+              <p className="mt-4">No orders in the database yet.</p>
+            </div>
+          ) : (
+            <table className="w-full text-left text-sm">
+              <thead className="border-b text-xs uppercase tracking-[0.16em] text-[var(--muted-fg)]">
+                <tr>
+                  {['Order', 'Customer', 'Item', 'Payment', 'Status'].map((h) => (
+                    <th key={h} className="px-6 py-4 font-medium">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {dbOrders.map((o) => (
+                  <tr key={o._id || o.orderId} className="border-b last:border-0 hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4 font-mono text-xs">{o.orderId}</td>
+                    <td className="px-6 py-4">
+                      <p className="font-medium">{o.customer.name}</p>
+                      <p className="text-xs text-[var(--muted-fg)]">{o.customer.phone}</p>
+                    </td>
+                    <td className="px-6 py-4">{o.product.name} × {o.quantity}</td>
+                    <td className="px-6 py-4">
+                      <p className="tabular-nums font-medium">{formatINR(o.total)}</p>
+                      {o.receiptUrl && (
+                        <a href={o.receiptUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-[var(--primary)] hover:underline">
+                          <FileImage className="h-3 w-3" /> View Receipt
+                        </a>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      {o.status === 'pending' ? (
+                        <button 
+                          onClick={() => handleApprove(o.orderId)}
+                          className="rounded-full bg-[var(--fg)] px-4 py-2 text-xs font-medium text-[var(--bg)] transition-transform hover:scale-105 active:scale-95"
+                        >
+                          Approve Order
+                        </button>
+                      ) : (
+                        <span className="fl-soft-success inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-[var(--success)]">
+                          <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" /> Verified
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
+
+      {/* TAB 2: ADD PRODUCT */}
+      {adminTab === 'products' && (
+        <div className="glass max-w-3xl rounded-[1.75rem] p-8 animate-fade">
+          <div className="flex items-center gap-3 mb-6">
+            <PlusCircle className="h-6 w-6 text-[var(--primary)]" />
+            <h2 className="fl-serif text-2xl">Publish New Product</h2>
+          </div>
+          <form onSubmit={handleAddProduct} className="space-y-5">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label className="fl-label">Product Name</label>
+                <input required value={prodForm.name} onChange={e => setProdForm({...prodForm, name: e.target.value})} className="fl-input" placeholder="e.g. Vintage Aston Martin Frame" />
+              </div>
+              <div>
+                <label className="fl-label">Price (INR)</label>
+                <input required type="number" value={prodForm.price} onChange={e => setProdForm({...prodForm, price: e.target.value})} className="fl-input" placeholder="e.g. 4500" />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="fl-label">Description</label>
+                <textarea required rows={3} value={prodForm.description} onChange={e => setProdForm({...prodForm, description: e.target.value})} className="fl-input resize-none" placeholder="Describe the item..." />
+              </div>
+              <div>
+                <label className="fl-label">Category</label>
+                <select value={prodForm.category} onChange={e => setProdForm({...prodForm, category: e.target.value})} className="fl-input">
+                  <option value="ready">Ready to gift</option>
+                  <option value="customizable">Customizable</option>
+                </select>
+              </div>
+              <div>
+                <label className="fl-label">Type</label>
+                <select value={prodForm.type} onChange={e => setProdForm({...prodForm, type: e.target.value})} className="fl-input">
+                  <option value="cars">Cars & Frames</option>
+                  <option value="hampers">Luxury Hampers</option>
+                  <option value="floral">Artisan Florals</option>
+                </select>
+              </div>
+              <div className="sm:col-span-2">
+                <label className="fl-label">Features (Comma separated)</label>
+                <input required value={prodForm.features} onChange={e => setProdForm({...prodForm, features: e.target.value})} className="fl-input" placeholder="Die-cast model, Custom license plate, Premium LED..." />
+              </div>
+              <div>
+                <span className="fl-label">Product Image</span>
+                <input required type="file" accept="image/*" onChange={e => setProdFile(e.target.files[0])} className="block w-full text-sm text-[var(--muted-fg)] file:mr-4 file:rounded-full file:border-0 file:bg-white/10 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[var(--fg)] hover:file:bg-white/20" />
+              </div>
+              <div className="flex items-center h-full pt-4">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={prodForm.isTrending} onChange={e => setProdForm({...prodForm, isTrending: e.target.checked})} className="h-5 w-5 rounded border-white/20 bg-white/5 accent-[var(--danger)]" />
+                  <span className="text-sm font-medium">Mark as Trending (Hot Badge)</span>
+                </label>
+              </div>
+            </div>
+            <button type="submit" disabled={addingProduct} className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-[var(--primary)] py-3.5 text-sm font-medium text-[var(--primary-fg)] transition-opacity hover:opacity-90 disabled:opacity-50">
+              {addingProduct ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <PlusCircle className="h-5 w-5" />}
+              {addingProduct ? 'Publishing to Database...' : 'Publish Product'}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* TAB 3: ANALYTICS */}
+      {adminTab === 'analytics' && (
+        <div className="grid gap-6 sm:grid-cols-3 animate-fade">
+          <div className="glass rounded-[1.75rem] p-8 flex flex-col justify-between h-40">
+            <div className="flex items-center justify-between">
+              <span className="text-sm uppercase tracking-widest text-[var(--muted-fg)]">Total Revenue</span>
+              <BarChart3 className="h-5 w-5 text-[var(--success)]" />
+            </div>
+            <p className="fl-serif text-4xl">{formatINR(totalRevenue)}</p>
+          </div>
+          <div className="glass rounded-[1.75rem] p-8 flex flex-col justify-between h-40">
+            <div className="flex items-center justify-between">
+              <span className="text-sm uppercase tracking-widest text-[var(--muted-fg)]">Total Orders</span>
+              <Package className="h-5 w-5 text-[var(--primary)]" />
+            </div>
+            <p className="fl-serif text-4xl">{dbOrders.length}</p>
+          </div>
+          <div className="glass rounded-[1.75rem] p-8 flex flex-col justify-between h-40">
+            <div className="flex items-center justify-between">
+              <span className="text-sm uppercase tracking-widest text-[var(--muted-fg)]">Pending Approval</span>
+              <Clock className="h-5 w-5 text-[var(--danger)]" />
+            </div>
+            <p className="fl-serif text-4xl">{pendingCount}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* =========================================================================
+   CUSTOMER ORDERS DASHBOARD (MY ORDERS)
+   ========================================================================= */
+function CustomerOrdersView() {
+  const { customerUser, navigate, pushToast } = useStore()
+  const [myOrders, setMyOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!customerUser) {
+      navigate('home')
+      return
+    }
+    fetch(`${API_BASE}/api/orders/my-orders?email=${customerUser.email}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setMyOrders(data.orders)
+        setLoading(false)
+      })
+      .catch(() => {
+        pushToast({ kind: 'error', title: 'Error', body: 'Failed to load your orders.' })
+        setLoading(false)
+      })
+  }, [customerUser, navigate, pushToast])
+
+  return (
+    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+      <div className="flex items-center gap-4 border-b border-white/10 pb-6">
+        <button onClick={() => navigate('home')} className="fl-hover rounded-full p-2 text-[var(--muted-fg)]">
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+        <div>
+          <Eyebrow>Your Profile</Eyebrow>
+          <h1 className="fl-serif mt-2 text-4xl">Order History</h1>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <LoaderCircle className="h-8 w-8 animate-spin text-[var(--primary)]" />
+          </div>
+        ) : myOrders.length === 0 ? (
+          <div className="glass rounded-[2rem] p-16 text-center text-[var(--muted-fg)]">
+            <Package className="mx-auto h-12 w-12 opacity-50" />
+            <h2 className="fl-serif mt-6 text-2xl text-[var(--fg)]">No orders yet</h2>
+            <p className="mt-2">When you commission a piece, you can track its status here.</p>
+            <button onClick={() => navigate('home', 'collection')} className="mt-6 rounded-full bg-[var(--fg)] px-6 py-3 text-sm font-medium text-[var(--bg)] transition-transform hover:scale-105">
+              Explore Collection
+            </button>
           </div>
         ) : (
-          <table className="w-full text-left text-sm">
-            <thead className="border-b text-xs uppercase tracking-[0.16em] text-[var(--muted-fg)]">
-              <tr>
-                {['Order', 'Customer', 'Item', 'Payment Details', 'Status'].map((h) => (
-                  <th key={h} className="px-6 py-4 font-medium">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {dbOrders.map((o) => (
-                <tr key={o._id || o.orderId} className="border-b last:border-0">
-                  <td className="px-6 py-4 font-mono text-xs">{o.orderId}</td>
-                  <td className="px-6 py-4">
-                    <p className="font-medium">{o.customer.name}</p>
-                    <p className="text-xs text-[var(--muted-fg)]">{o.customer.phone}</p>
-                  </td>
-                  <td className="px-6 py-4">{o.product.name} × {o.quantity}</td>
-                  <td className="px-6 py-4">
-                    <p className="tabular-nums font-medium">{formatINR(o.total)}</p>
-                    <p className="text-xs font-mono text-[var(--muted-fg)]">UTR: {o.txnId}</p>
-                    {o.receiptUrl && (
-                      <a href={o.receiptUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-[var(--primary)] hover:underline">
-                        <FileImage className="h-3 w-3" /> View Receipt
-                      </a>
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                    {o.status === 'pending' ? (
-                      <button 
-                        onClick={() => handleApprove(o.orderId)}
-                        className="rounded-full bg-[var(--fg)] px-4 py-2 text-xs font-medium text-[var(--bg)] transition-transform hover:scale-105 active:scale-95"
-                      >
-                        Approve Order
-                      </button>
+          <div className="grid gap-6">
+            {myOrders.map(order => (
+              <div key={order._id} className="glass flex flex-col gap-6 rounded-[1.75rem] p-6 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-sm text-[var(--muted-fg)]">{order.orderId}</span>
+                    {order.status === 'pending' ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-[var(--fg)]">
+                        <Clock className="h-3 w-3" /> Pending Verification
+                      </span>
                     ) : (
-                      <span className="fl-soft-success inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-[var(--success)]">
-                        <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" /> Verified
+                      <span className="fl-soft-success inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium text-[var(--success)]">
+                        <BadgeCheck className="h-3 w-3" /> Approved & Crafting
                       </span>
                     )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                  <h3 className="fl-serif mt-3 text-2xl">{order.product.name}</h3>
+                  <p className="mt-1 text-sm text-[var(--muted-fg)]">Qty: {order.quantity} · Total: {formatINR(order.total)}</p>
+                </div>
+                {order.status === 'verified' && (
+                  <button onClick={() => navigate('home', 'reviews')} className="fl-shadow-primary flex items-center justify-center gap-2 rounded-full bg-[var(--primary)] px-5 py-2.5 text-sm font-medium text-[var(--primary-fg)] transition-transform hover:scale-105">
+                    <Star className="h-4 w-4" /> Review Piece
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
@@ -1664,7 +1794,7 @@ function AdminView() {
 }
 
 /* =========================================================================
-   CONTACT MODAL (native <dialog>)
+   CONTACT MODAL
    ========================================================================= */
 function ContactModal() {
   const { contactOpen, setContactOpen, pushToast } = useStore()
@@ -1784,8 +1914,6 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
-            
-            {/* BIGGER LOGO FIX */}
             <p className="flex items-center">
               <img 
                 src={logoImg} 
@@ -1903,11 +2031,11 @@ function Views() {
       {view === 'customize' && <CustomizeView />}
       {view === 'checkout' && <CheckoutView />}
       {view === 'admin' && <AdminView />}
+      {view === 'my-orders' && <CustomerOrdersView />}
     </main>
   )
 }
 
-// --- NEW: AUTH MODAL WRAPPER ---
 function AuthModalWrapper() {
   const { showAuthModal, setShowAuthModal, setCustomerUser } = useStore()
   if (!showAuthModal) return null
