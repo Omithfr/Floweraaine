@@ -1,101 +1,199 @@
-export const STORE = {
-  name: 'Floweraaine',
-  city: 'Mumbai · Kerala',
-  email: 'floweraaine@gmail.com',
-  whatsappNumber: '919745082273',
-  whatsappDisplay: '+91 97450 82273',
-  upiId: '7356238385@fam' // Replace with your actual UPI ID
+// FORMATTING HELPERS
+export function formatINR(amount) {
+  // The "0000" bespoke price logic: If price is 0, it relies on a custom budget
+  if (amount === 0) return 'Bespoke / Custom Budget';
+  
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0
+  }).format(amount);
 }
 
-export const HERO_IMAGE = 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=80'
+export function hideBrokenImage(e) {
+  e.target.style.display = 'none';
+}
 
-export const OCCASIONS = ['Birthday', 'Anniversary', 'Wedding', 'Just Because', 'Corporate', 'Other']
+export function whatsappLink(message) {
+  return `https://wa.me/919745082273?text=${encodeURIComponent(message)}`;
+}
 
-export const products = [
+export function mailtoLink(subject, body) {
+  return `mailto:floweraaine@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+// SEED REVIEWS
+export const seedReviews = [
   {
-    id: 'p1',
+    id: 'r-1',
+    name: 'Aisha M.',
+    city: 'Kochi',
+    rating: 5,
+    title: 'Absolutely stunning work',
+    body: 'The Porsche frame exceeded all my expectations. The attention to detail on the license plate and the hand-tied ribbon made it the perfect anniversary gift.',
+    product: 'Porsche 911 Frame',
+    verified: true
+  },
+  {
+    id: 'r-2',
+    name: 'Rahul K.',
+    city: 'Trivandrum',
+    rating: 5,
+    title: 'Best custom hamper ever',
+    body: 'I gave them a budget and a theme, and they delivered magic. The unboxing experience is premium from start to finish.',
+    product: 'Custom Birthday Hamper',
+    verified: true
+  }
+];
+
+// ORIGINAL HARDCODED CATALOG
+export const products = [
+  // --- CARS & FRAMES ---
+  {
+    id: 'p-1',
     name: 'Porsche 911 Frame',
     price: 3500,
+    description: 'A striking 3D shadowbox featuring a die-cast Porsche 911. The backdrop can be personalized with a date, name, or custom message.',
     category: 'customizable',
     type: 'cars',
+    features: ['Die-cast model', 'Custom license plate', 'Premium shadowbox'],
     isTrending: true,
-    // Multiple images added for Swiper functionality
-    images: [
-      'https://images.unsplash.com/photo-1503376762279-58b292db90e8?auto=format&fit=crop&q=80&w=800',
-      'https://images.unsplash.com/photo-1502877338593-d3640b714ae0?auto=format&fit=crop&q=80&w=800'
-    ],
-    image: 'https://images.unsplash.com/photo-1503376762279-58b292db90e8?auto=format&fit=crop&q=80&w=800',
-    description: 'A striking 3D shadowbox featuring a die-cast Porsche 911. The backdrop can be personalized with dates or a custom license plate text.',
-    features: ['1:32 Scale Model', 'Glass Shadowbox', 'Customizable Backdrop']
+    image: '/product images/porsche.jpg'
   },
   {
-    id: 'p2',
-    name: 'BMW M4 Hamper Box',
-    price: 4800,
+    id: 'p-2',
+    name: "3D Collector's Frame: Dodge Charger",
+    price: 3800,
+    description: 'A dark, sleek tribute to American muscle. This shadowbox mounts a detailed 3D die-cast model, perfect for any automotive enthusiast.',
+    category: 'customizable',
+    type: 'cars',
+    features: ['Die-cast Dodge Charger', 'Custom backing', 'Wall-mountable'],
+    isTrending: false,
+    image: '/product images/Dodge Charger Car.jpg'
+  },
+  {
+    id: 'p-3',
+    name: 'BMW M4 Collector Frame',
+    price: 3500,
+    description: 'A pristine display featuring the iconic BMW M4. Hand-mounted and framed for the ultimate desktop or wall display.',
+    category: 'customizable',
+    type: 'cars',
+    features: ['Die-cast BMW M4', 'Minimalist typography', 'Glass front'],
+    isTrending: true,
+    image: '/product images/BMW M4 car frame.jpg'
+  },
+  {
+    id: 'p-4',
+    name: 'Mahindra Thar Adventure Frame',
+    price: 3200,
+    description: 'A rugged and beautiful showcase of the classic Thar, set against a customized terrain or personalized backdrop.',
+    category: 'customizable',
+    type: 'cars',
+    features: ['Die-cast Thar', 'Custom adventure theme', 'Premium frame'],
+    isTrending: false,
+    image: '/product images/Thar Car Frame.jpg'
+  },
+  {
+    id: 'p-5',
+    name: 'A4 Classic Custom Frame',
+    price: 1500,
+    description: 'A beautiful, large-format A4 frame ready to be personalized with your photographs, quotes, or special dates.',
+    category: 'customizable',
+    type: 'cars',
+    features: ['A4 dimensions', 'High-quality print', 'Ready to hang'],
+    isTrending: false,
+    image: '/product images/A4 Customized Frame.jpg'
+  },
+  {
+    id: 'p-6',
+    name: 'Mini 4x4 Keepsake Frame',
+    price: 999,
+    description: 'A compact, elegant 4x4 inch frame perfect for desks, nightstands, and small memory keepsakes.',
+    category: 'customizable',
+    type: 'cars',
+    features: ['4x4 dimensions', 'Easel back', 'Matte finish'],
+    isTrending: false,
+    image: '/product images/4x4-frame.jpg'
+  },
+
+  // --- LUXURY HAMPERS (Using 0 Price for Custom Budgets) ---
+  {
+    id: 'p-7',
+    name: 'Bespoke Birthday Hamper',
+    price: 0, 
+    description: 'Tell us the person, the occasion, and your budget. We will sketch and craft a customized birthday hamper specifically around them.',
     category: 'customizable',
     type: 'hampers',
+    features: ['Budget-based curation', 'Personalized items', 'Premium unboxing'],
     isTrending: true,
-    images: [
-      'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&q=80&w=800',
-      'https://images.unsplash.com/photo-1556189250-72ba954cfc2b?auto=format&fit=crop&q=80&w=800'
-    ],
-    image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&q=80&w=800',
-    description: 'A highly detailed die-cast BMW M4 paired beautifully with a vibrant bed of artisan soap roses.',
-    features: ['Die-cast M4 Model', 'Artisan Soap Roses', 'Magnetic Gift Box']
+    image: '/product images/Custom Birthday Hamper.jpg'
   },
   {
-    id: 'p3',
-    name: 'The Azure Marble Hamper',
-    price: 5200,
-    category: 'ready',
+    id: 'p-8',
+    name: 'Festive Onam Hamper',
+    price: 0,
+    description: 'A beautifully curated traditional hamper featuring authentic Kerala treats, cultural keepsakes, and personalized festive greetings.',
+    category: 'customizable',
     type: 'hampers',
+    features: ['Traditional curation', 'Festive packaging', 'Custom notes'],
     isTrending: false,
-    images: [
-      'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=80&w=800'
-    ],
-    image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=80&w=800',
-    description: 'Housed in a stunning azure marble-patterned keepsake box, revealing curated artisan chocolates and luxury treats.',
-    features: ['Marble-Pattern Box', 'Artisan Chocolates', 'Premium Finish']
+    image: '/product images/Onam Hamper.jpg'
   },
   {
-    id: 'p4',
-    name: 'Crimson Red Artisan Bouquet',
-    price: 1800,
+    id: 'p-9',
+    name: 'Luxury Trolley Hamper',
+    price: 0,
+    description: 'Our most extravagant gifting option. A customized multi-tier trolley filled with hand-selected luxury goods and floral arrangements.',
+    category: 'customizable',
+    type: 'hampers',
+    features: ['Multi-tier trolley', 'Extravagant curation', 'Floral integration'],
+    isTrending: true,
+    image: '/product images/trolly-hamper.jpg'
+  },
+  {
+    id: 'p-10',
+    name: 'Ultimate Defender Hamper',
+    price: 0,
+    description: 'A massive bespoke hamper featuring a centerpiece Defender car frame surrounded by personalized gifts and artisan treats.',
+    category: 'customizable',
+    type: 'hampers',
+    features: ['Centerpiece frame included', 'Bespoke gifts', 'Large format box'],
+    isTrending: false,
+    image: '/product images/Custom Hamper with Defeder Car Frame.jpg'
+  },
+
+  // --- ARTISAN FLORALS ---
+  {
+    id: 'p-11',
+    name: 'Scented Pastel Bouquet',
+    price: 1200,
+    description: 'Six handcrafted, intricately designed scented flowers arranged in a beautiful pastel bouquet. Lasts forever.',
     category: 'ready',
     type: 'floral',
-    isTrending: true,
-    images: [
-      'https://images.unsplash.com/photo-1546736209-648b2610bb47?auto=format&fit=crop&q=80&w=800',
-      'https://images.unsplash.com/photo-1589123053646-4e9a8f2ca354?auto=format&fit=crop&q=80&w=800'
-    ],
-    image: 'https://images.unsplash.com/photo-1546736209-648b2610bb47?auto=format&fit=crop&q=80&w=800',
-    description: 'A bold, romantic arrangement of everlasting crimson red soap roses, elegantly wrapped.',
-    features: ['Everlasting Soap Roses', 'Silk Ribbon', 'Premium Wrap']
+    features: ['6 handmade flowers', 'Scent-infused', 'Premium wrapping'],
+    isTrending: false,
+    image: '/product images/Scented Flower Bouquet (6 Flowers).jpg'
   },
   {
-    id: 'p5',
-    name: '3D Collector\'s Frame: Dodge Charger',
-    price: 3600,
-    category: 'customizable',
-    type: 'cars',
+    id: 'p-12',
+    name: 'Classic Red Rose Bouquet',
+    price: 1200,
+    description: 'Six deeply colored, handcrafted red roses infused with premium scents, tied with our signature ribbon.',
+    category: 'ready',
+    type: 'floral',
+    features: ['6 red flowers', 'Scent-infused', 'Signature ribbon'],
+    isTrending: true,
+    image: '/product images/Scented Flower Bouquet red(6 Flowers).jpg'
+  },
+  {
+    id: 'p-13',
+    name: 'Double Scented Bouquet Set',
+    price: 2200,
+    description: 'A magnificent double arrangement featuring 12 total handcrafted scented flowers in a lavish presentation.',
+    category: 'ready',
+    type: 'floral',
+    features: ['12 handmade flowers', 'Dual arrangement', 'Extravagant presentation'],
     isTrending: false,
-    images: [
-      'https://images.unsplash.com/photo-1588127333419-b9d7de223dcf?auto=format&fit=crop&q=80&w=800'
-    ],
-    image: 'https://images.unsplash.com/photo-1588127333419-b9d7de223dcf?auto=format&fit=crop&q=80&w=800',
-    description: 'A dark, sleek tribute to American muscle. This shadowbox mounts a detailed 3D die-cast model.',
-    features: ['1:32 Scale Model', 'Matte Black Frame', 'Custom Plate']
+    image: '/product images/2 Scented Flower Bouquets (6x2 Flowers).jpg'
   }
-]
-
-export const seedReviews = [
-  { id: 'r1', name: 'Aarav M.', city: 'Kochi', rating: 5, title: 'Absolutely breathtaking', body: 'The BMW M4 hamper exceeded all my expectations. The soap roses smell amazing and the die-cast model is incredibly detailed.', product: 'BMW M4 Hamper Box', verified: true },
-  { id: 'r2', name: 'Nila T.', city: 'Trivandrum', rating: 5, title: 'The perfect anniversary gift', body: 'I ordered the customized Porsche frame for my husband. The attention to detail is stunning.', product: 'Porsche 911 Frame', verified: true },
-  { id: 'r3', name: 'Rohan K.', city: 'Calicut', rating: 4, title: 'Beautifully packaged', body: 'The Azure Marble hamper was a hit. Delivery was seamless and the packaging feels incredibly premium.', product: 'The Azure Marble Hamper', verified: true }
-]
-
-export const formatINR = (amount) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount)
-export const whatsappLink = (text) => `https://wa.me/${STORE.whatsappNumber}?text=${encodeURIComponent(text)}`
-export const mailtoLink = (subject, body) => `mailto:${STORE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-export const buildOrderMessage = (p, q, c) => `Hi ${STORE.name}!\n\nI'd like to order:\n${q}x ${p.name}\n\nOccasion: ${c.occasion || 'N/A'}\nPersonalized text: ${c.text || 'N/A'}\nNote: ${c.note || 'N/A'}\n\nPlease guide me through payment!`
-export const hideBrokenImage = (e) => { e.currentTarget.style.display = 'none' }
+];
