@@ -32,7 +32,8 @@ export const STORE = {
   phone: '+91 97450 82273',
   whatsapp: '919745082273',
   email: 'floweraaine@gmail.com',
-  location: 'Kerala & Mumbai'
+  location: 'Kerala & Mumbai',
+  upiId: '9745082273@upi' // <-- UPDATE THIS to your exact bank UPI ID
 };
 
 // OCCASIONS FOR CUSTOMIZATION
