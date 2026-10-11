@@ -207,7 +207,7 @@ export const products = [
     type: 'floral',
     features: ['6 red flowers', 'Scent-infused', 'Signature ribbon'],
     isTrending: true,
-    image: '/product-images/scented-flower-bouquet-red-6.jpg' // FIXED WITH HYPHENS
+    image: '/product-images/scented-flower-bouquet-red-6.jpg'
   },
   {
     id: 'p-13',
