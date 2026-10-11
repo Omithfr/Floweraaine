@@ -150,7 +150,7 @@ export const products = [
     type: 'hampers',
     features: ['Budget-based curation', 'Personalized items', 'Premium unboxing'],
     isTrending: true,
-    image: '/product-images/custom%20birthday%20hamper.jpg' // FIXED WITH SPACES ENCODED
+    image: '/product-images/custom-birthday-hamper.jpg'
   },
   {
     id: 'p-8',
@@ -207,7 +207,7 @@ export const products = [
     type: 'floral',
     features: ['6 red flowers', 'Scent-infused', 'Signature ribbon'],
     isTrending: true,
-    image: '/product-images/scented-flower-bouquet-red-6.jpg'
+    image: '/product-images/scented%20flower%20bouquet%20red%206.jpg'
   },
   {
     id: 'p-13',
