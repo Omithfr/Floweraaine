@@ -41,7 +41,7 @@ export const seedReviews = [
     rating: 5,
     title: 'Best custom hamper ever',
     body: 'I gave them a budget and a theme, and they delivered magic. The unboxing experience is premium from start to finish.',
-    product: 'Custom Birthday Hamper',
+    product: 'Bespoke Birthday Hamper',
     verified: true
   }
 ];
@@ -69,7 +69,7 @@ export const products = [
     type: 'cars',
     features: ['Die-cast Dodge Charger', 'Custom backing', 'Wall-mountable'],
     isTrending: false,
-    image: '/product images/Dodge Charger Car.jpg'
+    image: '/product images/dodge-charger-car.jpg'
   },
   {
     id: 'p-3',
@@ -80,7 +80,7 @@ export const products = [
     type: 'cars',
     features: ['Die-cast BMW M4', 'Minimalist typography', 'Glass front'],
     isTrending: true,
-    image: '/product images/BMW M4 car frame.jpg'
+    image: '/product images/bmw-m4-car-frame.jpg'
   },
   {
     id: 'p-4',
@@ -91,7 +91,7 @@ export const products = [
     type: 'cars',
     features: ['Die-cast Thar', 'Custom adventure theme', 'Premium frame'],
     isTrending: false,
-    image: '/product images/Thar Car Frame.jpg'
+    image: '/product images/thar-car-frame.jpg'
   },
   {
     id: 'p-5',
@@ -102,7 +102,7 @@ export const products = [
     type: 'cars',
     features: ['A4 dimensions', 'High-quality print', 'Ready to hang'],
     isTrending: false,
-    image: '/product images/A4 Customized Frame.jpg'
+    image: '/product images/a4-customized-frame.jpg'
   },
   {
     id: 'p-6',
@@ -126,7 +126,7 @@ export const products = [
     type: 'hampers',
     features: ['Budget-based curation', 'Personalized items', 'Premium unboxing'],
     isTrending: true,
-    image: '/product images/Custom Birthday Hamper.jpg'
+    image: '/product images/custom-birthday-hamper.jpg'
   },
   {
     id: 'p-8',
@@ -137,7 +137,7 @@ export const products = [
     type: 'hampers',
     features: ['Traditional curation', 'Festive packaging', 'Custom notes'],
     isTrending: false,
-    image: '/product images/Onam Hamper.jpg'
+    image: '/product images/onam-hamper.jpg'
   },
   {
     id: 'p-9',
@@ -159,7 +159,7 @@ export const products = [
     type: 'hampers',
     features: ['Centerpiece frame included', 'Bespoke gifts', 'Large format box'],
     isTrending: false,
-    image: '/product images/Custom Hamper with Defeder Car Frame.jpg'
+    image: '/product images/custom-hamper-defender-frame.jpg'
   },
 
   // --- ARTISAN FLORALS ---
@@ -172,7 +172,7 @@ export const products = [
     type: 'floral',
     features: ['6 handmade flowers', 'Scent-infused', 'Premium wrapping'],
     isTrending: false,
-    image: '/product images/Scented Flower Bouquet (6 Flowers).jpg'
+    image: '/product images/scented-flower-bouquet-6.jpg'
   },
   {
     id: 'p-12',
@@ -183,7 +183,7 @@ export const products = [
     type: 'floral',
     features: ['6 red flowers', 'Scent-infused', 'Signature ribbon'],
     isTrending: true,
-    image: '/product images/Scented Flower Bouquet red(6 Flowers).jpg'
+    image: '/product images/scented-flower-bouquet-red-6.jpg'
   },
   {
     id: 'p-13',
@@ -194,6 +194,6 @@ export const products = [
     type: 'floral',
     features: ['12 handmade flowers', 'Dual arrangement', 'Extravagant presentation'],
     isTrending: false,
-    image: '/product images/2 Scented Flower Bouquets (6x2 Flowers).jpg'
+    image: '/product images/2-scented-flower-bouquets-6x2.jpg'
   }
 ];
