@@ -1,4 +1,4 @@
-// FORMATTING HELPERS
+// FORMATTING & UTILITY HELPERS
 export function formatINR(amount) {
   if (amount === 0) return 'Bespoke / Custom Budget';
   
@@ -13,6 +13,10 @@ export function hideBrokenImage(e) {
   e.target.style.display = 'none';
 }
 
+export function buildOrderMessage(product, customText = '') {
+  return `Hi! I would like to order "${product.name}" (${product.price === 0 ? 'Bespoke / Custom Budget' : formatINR(product.price)}). ${customText ? 'Customization details: ' + customText : ''}`;
+}
+
 export function whatsappLink(message) {
   return `https://wa.me/919745082273?text=${encodeURIComponent(message)}`;
 }
@@ -20,6 +24,17 @@ export function whatsappLink(message) {
 export function mailtoLink(subject, body) {
   return `mailto:floweraaine@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
+
+// OCCASIONS FOR CUSTOMIZATION
+export const OCCASIONS = [
+  'Birthday',
+  'Anniversary',
+  'Wedding',
+  'Graduation',
+  'Festive / Onam',
+  'Valentine\'s Day',
+  'Just Because'
+];
 
 // SEED REVIEWS
 export const seedReviews = [
