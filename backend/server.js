@@ -8,7 +8,8 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import orderRoutes from './routes/orderRoutes.js';
-import productRoutes from './routes/productRoutes.js'; // <-- ADDED FOR PHASE 4
+import productRoutes from './routes/productRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 // Setup for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -79,7 +80,8 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 
 // API Routes
 app.use('/api/orders', orderRoutes);
-app.use('/api/products', productRoutes); // <-- ADDED FOR PHASE 4
+app.use('/api/products', productRoutes);
+app.use('/api/auth', authRoutes);
 
 // PRODUCTION SETUP: Serve React Frontend
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
