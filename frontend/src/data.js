@@ -25,6 +25,16 @@ export function mailtoLink(subject, body) {
   return `mailto:floweraaine@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
+// STORE METADATA CONFIGURATION
+export const STORE = {
+  name: 'Floweraaine',
+  tagline: 'Pieces made to be remembered.',
+  phone: '+91 97450 82273',
+  whatsapp: '919745082273',
+  email: 'floweraaine@gmail.com',
+  location: 'Kerala & Mumbai'
+};
+
 // OCCASIONS FOR CUSTOMIZATION
 export const OCCASIONS = [
   'Birthday',
