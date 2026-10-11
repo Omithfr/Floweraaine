@@ -150,7 +150,7 @@ export const products = [
     type: 'hampers',
     features: ['Budget-based curation', 'Personalized items', 'Premium unboxing'],
     isTrending: true,
-    image: '/product-images/custom-birthday-hamper.jpg'
+    image: '/product-images/custom%20birthday%20hamper.jpg' // FIXED WITH SPACES ENCODED
   },
   {
     id: 'p-8',
