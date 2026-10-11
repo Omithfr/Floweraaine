@@ -5,6 +5,7 @@ import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import ContactModal from './components/ContactModal.jsx';
 import CustomerAuth from './CustomerAuth.jsx';
+import AIConcierge from './components/AIConcierge.jsx';
 
 import HomeView from './views/HomeView.jsx';
 import CustomizeView from './views/CustomizeView.jsx';
@@ -41,6 +42,7 @@ export default function App() {
         <Views />
         <Footer />
         <WhatsAppFab />
+        <AIConcierge />
         <ContactModal />
         <Toaster />
         <AuthModalWrapper />
