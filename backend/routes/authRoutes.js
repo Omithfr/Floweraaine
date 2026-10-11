@@ -14,6 +14,27 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
+// POST: Super Admin Login
+router.post('/admin/login', (req, res) => {
+  try {
+    const { password } = req.body;
+    
+    // Check against the environment variable you set in Render
+    if (password === process.env.ADMIN_PASSWORD) {
+      const token = jwt.sign(
+        { role: 'admin' }, 
+        process.env.JWT_SECRET || 'floweraaine_super_secret_key', 
+        { expiresIn: '1d' }
+      );
+      return res.json({ success: true, token });
+    } else {
+      return res.status(401).json({ success: false, message: 'Invalid admin credentials.' });
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // POST: Create a new customer account
 router.post('/signup', async (req, res) => {
   try {

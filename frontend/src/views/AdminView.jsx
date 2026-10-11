@@ -38,8 +38,8 @@ export default function AdminView() {
   const handleLogin = async (e) => {
     e.preventDefault(); setError(false); setLoading(true);
     try {
-      // Updated the fetch URL to point to the correct auth router path
-      const res = await fetch(`${API_BASE}/api/auth/login`, { 
+      // FIXED: URL now correctly points to the admin login route!
+      const res = await fetch(`${API_BASE}/api/auth/admin/login`, { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify({ password }) 
