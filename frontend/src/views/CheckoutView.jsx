@@ -1,5 +1,5 @@
 import React, { useState, useId } from 'react';
-import { BadgeCheck, Clock, MailCheck, MessageCircle, Star, Lock, ShieldAlert, ShoppingBag, LoaderCircle, Smartphone, Check, Copy, FileImage, ImagePlus, X, ArrowRight } from 'lucide-react';
+import { BadgeCheck, Clock, MailCheck, MessageCircle, Star, Lock, ShieldAlert, ShoppingBag, LoaderCircle, Smartphone, Check, Copy, FileImage, ImagePlus, X, ArrowRight, ShieldCheck } from 'lucide-react';
 import { useStore } from '../store/store.jsx';
 import { formatINR, hideBrokenImage, whatsappLink, STORE } from '../data.js';
 import { Eyebrow } from '../components/SharedUI.jsx';
@@ -189,7 +189,7 @@ function OrderConfirmed({ order, onReview }) {
               <p className="text-xs text-[var(--muted-fg)]">From: {STORE.email}</p>
               <p className="fl-serif text-xl">Your Floweraaine order is confirmed</p>
               <p className="text-[var(--muted-fg)]">
-                Dear {order.customer.name.split(' ')[0]}, we&apos;ve received your UPI payment of {formatINR(order.total)} for {order.product.name}. We&apos;ll share a preview on WhatsApp before dispatch.
+                Dear {order.customer.name.split(' ')[0]}, we've received your UPI payment of {formatINR(order.total)} for {order.product.name}. We'll share a preview on WhatsApp before dispatch.
               </p>
             </div>
           </div>
@@ -289,7 +289,7 @@ export default function CheckoutView() {
                   <div className="sm:col-span-2">
                     <label htmlFor={stateId} className="fl-label">Shipping State</label>
                     <select id={stateId} value={details.state} onChange={update('state')} className="fl-input appearance-none bg-[var(--muted)]"><option value="Kerala">Kerala (Exclusive)</option></select>
-                    <p className="mt-1 text-xs text-[var(--danger)]">* We currently only fulfill orders within Kerala.</p>
+                    <p className="mt-1 text-xs text-[var(--danger)]">We currently only fulfill orders within Kerala.</p>
                   </div>
                   <div className="sm:col-span-2"><label htmlFor={addressId} className="fl-label">Delivery address</label><textarea id={addressId} rows={2} autoComplete="street-address" value={details.address} onChange={update('address')} className="fl-input resize-none" placeholder="House, street, city, PIN code" /></div>
                 </div>
