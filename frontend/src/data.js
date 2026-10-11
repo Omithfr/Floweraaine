@@ -1,6 +1,5 @@
 // FORMATTING HELPERS
 export function formatINR(amount) {
-  // The "0000" bespoke price logic: If price is 0, it relies on a custom budget
   if (amount === 0) return 'Bespoke / Custom Budget';
   
   return new Intl.NumberFormat('en-IN', {
@@ -46,7 +45,7 @@ export const seedReviews = [
   }
 ];
 
-// ORIGINAL HARDCODED CATALOG
+// ORIGINAL STUDIO CATALOG WITH SANITIZED FOLDER AND IMAGE PATHS
 export const products = [
   // --- CARS & FRAMES ---
   {
@@ -58,7 +57,7 @@ export const products = [
     type: 'cars',
     features: ['Die-cast model', 'Custom license plate', 'Premium shadowbox'],
     isTrending: true,
-    image: '/product images/porsche.jpg'
+    image: '/product-images/porsche.jpg'
   },
   {
     id: 'p-2',
@@ -69,7 +68,7 @@ export const products = [
     type: 'cars',
     features: ['Die-cast Dodge Charger', 'Custom backing', 'Wall-mountable'],
     isTrending: false,
-    image: '/product images/dodge-charger-car.jpg'
+    image: '/product-images/dodge-charger-car.jpg'
   },
   {
     id: 'p-3',
@@ -80,7 +79,7 @@ export const products = [
     type: 'cars',
     features: ['Die-cast BMW M4', 'Minimalist typography', 'Glass front'],
     isTrending: true,
-    image: '/product images/bmw-m4-car-frame.jpg'
+    image: '/product-images/bmw-m4-car-frame.jpg'
   },
   {
     id: 'p-4',
@@ -91,7 +90,7 @@ export const products = [
     type: 'cars',
     features: ['Die-cast Thar', 'Custom adventure theme', 'Premium frame'],
     isTrending: false,
-    image: '/product images/thar-car-frame.jpg'
+    image: '/product-images/thar-car-frame.jpg'
   },
   {
     id: 'p-5',
@@ -102,7 +101,7 @@ export const products = [
     type: 'cars',
     features: ['A4 dimensions', 'High-quality print', 'Ready to hang'],
     isTrending: false,
-    image: '/product images/a4-customized-frame.jpg'
+    image: '/product-images/a4-customized-frame.jpg'
   },
   {
     id: 'p-6',
@@ -113,7 +112,7 @@ export const products = [
     type: 'cars',
     features: ['4x4 dimensions', 'Easel back', 'Matte finish'],
     isTrending: false,
-    image: '/product images/4x4-frame.jpg'
+    image: '/product-images/4x4-frame.jpg'
   },
 
   // --- LUXURY HAMPERS (Using 0 Price for Custom Budgets) ---
@@ -126,7 +125,7 @@ export const products = [
     type: 'hampers',
     features: ['Budget-based curation', 'Personalized items', 'Premium unboxing'],
     isTrending: true,
-    image: '/product images/custom-birthday-hamper.jpg'
+    image: '/product-images/custom-birthday-hamper.jpg'
   },
   {
     id: 'p-8',
@@ -137,7 +136,7 @@ export const products = [
     type: 'hampers',
     features: ['Traditional curation', 'Festive packaging', 'Custom notes'],
     isTrending: false,
-    image: '/product images/onam-hamper.jpg'
+    image: '/product-images/onam-hamper.jpg'
   },
   {
     id: 'p-9',
@@ -148,7 +147,7 @@ export const products = [
     type: 'hampers',
     features: ['Multi-tier trolley', 'Extravagant curation', 'Floral integration'],
     isTrending: true,
-    image: '/product images/trolly-hamper.jpg'
+    image: '/product-images/trolly-hamper.jpg'
   },
   {
     id: 'p-10',
@@ -159,7 +158,7 @@ export const products = [
     type: 'hampers',
     features: ['Centerpiece frame included', 'Bespoke gifts', 'Large format box'],
     isTrending: false,
-    image: '/product images/custom-hamper-defender-frame.jpg'
+    image: '/product-images/custom-hamper-defender-frame.jpg'
   },
 
   // --- ARTISAN FLORALS ---
@@ -172,7 +171,7 @@ export const products = [
     type: 'floral',
     features: ['6 handmade flowers', 'Scent-infused', 'Premium wrapping'],
     isTrending: false,
-    image: '/product images/scented-flower-bouquet-6.jpg'
+    image: '/product-images/scented-flower-bouquet-6.jpg'
   },
   {
     id: 'p-12',
@@ -183,7 +182,7 @@ export const products = [
     type: 'floral',
     features: ['6 red flowers', 'Scent-infused', 'Signature ribbon'],
     isTrending: true,
-    image: '/product images/scented-flower-bouquet-red-6.jpg'
+    image: '/product-images/scented-flower-bouquet-red-6.jpg'
   },
   {
     id: 'p-13',
@@ -194,6 +193,6 @@ export const products = [
     type: 'floral',
     features: ['12 handmade flowers', 'Dual arrangement', 'Extravagant presentation'],
     isTrending: false,
-    image: '/product images/2-scented-flower-bouquets-6x2.jpg'
+    image: '/product-images/2-scented-flower-bouquets-6x2.jpg'
   }
 ];
