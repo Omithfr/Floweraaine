@@ -14,8 +14,9 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
-// Import our logo and isolated data
+// Import our logo, isolated data, and newly created Auth component
 import logoImg from './assets/Floweraaine logo.jpg'
+import CustomerAuth from './CustomerAuth.jsx'
 import { 
   STORE, HERO_IMAGE, products, seedReviews, OCCASIONS, 
   formatINR, whatsappLink, mailtoLink, buildOrderMessage, hideBrokenImage 
@@ -40,6 +41,19 @@ function StoreProvider({ children }) {
   const [contactOpen, setContactOpen] = useState(false)
   const [toasts, setToasts] = useState([])
   const toastId = useRef(0)
+
+  // --- NEW: CUSTOMER AUTHENTICATION STATE ---
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [customerUser, setCustomerUserState] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('customerData')
+      return savedUser ? JSON.parse(savedUser) : null
+    } catch { return null }
+  })
+
+  const setCustomerUser = useCallback((user) => {
+    setCustomerUserState(user)
+  }, [])
 
   const navigate = useCallback((next, anchor) => {
     setView(next)
@@ -76,12 +90,23 @@ function StoreProvider({ children }) {
 
   const addReview = useCallback((review) => setReviews((prev) => [review, ...prev]), [])
 
+  // --- NEW: LOGOUT HANDLER ---
+  const handleLogout = useCallback(() => {
+    setCustomerUserState(null)
+    localStorage.removeItem('customerToken')
+    localStorage.removeItem('customerData')
+    pushToast({ kind: 'info', title: 'Signed out', body: 'You have been successfully signed out.' })
+  }, [pushToast])
+
   const value = useMemo(() => ({
     view, navigate, selectedProduct, selectProduct, customization, setCustomization, quantity, setQuantity,
     orders, addOrder, approveOrder, lastVerifiedOrder: orders.find(o => o.status === 'verified') ?? null,
     reviews, addReview, contactOpen, setContactOpen, toasts, pushToast, dismissToast,
+    // Auth context exports
+    customerUser, setCustomerUser, showAuthModal, setShowAuthModal, handleLogout
   }), [view, navigate, selectedProduct, selectProduct, customization, setCustomization, quantity, setQuantity,
-    orders, addOrder, approveOrder, reviews, addReview, contactOpen, toasts, pushToast, dismissToast])
+    orders, addOrder, approveOrder, reviews, addReview, contactOpen, toasts, pushToast, dismissToast,
+    customerUser, setCustomerUser, showAuthModal, setShowAuthModal, handleLogout])
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
 }
@@ -233,7 +258,7 @@ function ThemeToggle() {
    NAVBAR
    ========================================================================= */
 function Navbar() {
-  const { navigate, selectedProduct, quantity, setContactOpen } = useStore()
+  const { navigate, selectedProduct, quantity, setContactOpen, customerUser, setShowAuthModal, handleLogout } = useStore()
   const bagCount = selectedProduct ? quantity : 0
   const linkClass = 'fl-hover rounded-full px-4 py-2 text-sm text-[var(--muted-fg)] transition-colors hover:text-[var(--fg)]'
 
@@ -252,15 +277,45 @@ function Navbar() {
           <button type="button" onClick={() => navigate('home', 'reviews')} className={linkClass}>Reviews</button>
           <button type="button" onClick={() => setContactOpen(true)} className={linkClass}>Contact</button>
         </div>
-        <div className="flex items-center gap-2">
+        
+        <div className="flex items-center gap-2 sm:gap-4">
+          {/* CUSTOMER AUTH UI */}
+          {customerUser ? (
+            <div className="relative group flex items-center">
+              <button className="text-sm font-medium tracking-wide text-[var(--fg)] hover:opacity-70 transition-opacity">
+                Hi, {customerUser.name.split(' ')[0]}
+              </button>
+              <div className="absolute right-0 top-full mt-3 w-48 bg-[var(--bg)] border border-[var(--border)] rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200 overflow-hidden z-50">
+                <button onClick={() => { /* Navigate to Orders View */ }} className="w-full text-left px-4 py-3 text-sm text-[var(--muted-fg)] hover:text-[var(--fg)] hover:bg-[var(--muted)] transition">
+                  My Orders
+                </button>
+                <button 
+                  onClick={handleLogout} 
+                  className="w-full text-left px-4 py-3 text-sm text-[var(--danger)] hover:bg-[var(--muted)] transition border-t border-[var(--border)]"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowAuthModal(true)}
+              className="text-sm font-medium tracking-wide text-[var(--muted-fg)] hover:text-[var(--fg)] transition ml-2 sm:ml-0"
+            >
+              Sign In
+            </button>
+          )}
+
           <ThemeToggle />
+          
           <button
             type="button"
             onClick={() => navigate('checkout')}
             className="relative flex items-center gap-2 rounded-full bg-[var(--fg)] px-4 py-2.5 text-sm font-medium text-[var(--bg)] transition-transform duration-300 hover:scale-[1.03] active:scale-95"
           >
             <ShoppingBag className="h-4 w-4" aria-hidden="true" />
-            <span>Bag</span>
+            <span className="hidden sm:inline">Bag</span>
             <span className={`flex h-5 w-5 items-center justify-center rounded-full bg-[var(--primary)] text-[10px] font-semibold text-[var(--primary-fg)] transition-all duration-500 ${bagCount ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}>
               {bagCount}
               <span className="sr-only"> items in bag</span>
@@ -1804,7 +1859,7 @@ function WhatsAppFab() {
   )
 }
 
-const toastIcons = { mail: MailCheck, success: BadgeCheck, info: Info }
+const toastIcons = { mail: MailCheck, success: BadgeCheck, info: Info, error: ShieldAlert }
 
 function Toaster() {
   const { toasts, dismissToast } = useStore()
@@ -1852,6 +1907,19 @@ function Views() {
   )
 }
 
+// --- NEW: AUTH MODAL WRAPPER ---
+function AuthModalWrapper() {
+  const { showAuthModal, setShowAuthModal, setCustomerUser } = useStore()
+  if (!showAuthModal) return null
+
+  return (
+    <CustomerAuth 
+      onClose={() => setShowAuthModal(false)} 
+      onLoginSuccess={(user) => setCustomerUser(user)} 
+    />
+  )
+}
+
 export default function App() {
   return (
     <StoreProvider>
@@ -1863,6 +1931,7 @@ export default function App() {
         <WhatsAppFab />
         <ContactModal />
         <Toaster />
+        <AuthModalWrapper />
       </div>
     </StoreProvider>
   )
