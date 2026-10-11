@@ -70,7 +70,7 @@ export const seedReviews = [
   }
 ];
 
-// ORIGINAL STUDIO CATALOG WITH SANITIZED FOLDER AND IMAGE PATHS
+// ORIGINAL STUDIO CATALOG MATCHED TO EXACT FOLDER FILENAMES
 export const products = [
   // --- CARS & FRAMES ---
   {
@@ -104,7 +104,7 @@ export const products = [
     type: 'cars',
     features: ['Die-cast BMW M4', 'Minimalist typography', 'Glass front'],
     isTrending: true,
-    image: '/product-images/bmw-m4-car-frame.jpg'
+    image: '/product-images/bmw-m4.jpg'
   },
   {
     id: 'p-4',
@@ -140,7 +140,7 @@ export const products = [
     image: '/product-images/4x4-frame.jpg'
   },
 
-  // --- LUXURY HAMPERS (Using 0 Price for Custom Budgets) ---
+  // --- LUXURY HAMPERS ---
   {
     id: 'p-7',
     name: 'Bespoke Birthday Hamper',
@@ -218,6 +218,6 @@ export const products = [
     type: 'floral',
     features: ['12 handmade flowers', 'Dual arrangement', 'Extravagant presentation'],
     isTrending: false,
-    image: '/product-images/2-scented-flower-bouquets-6x2.jpg'
+    image: '/product-images/scented-flower-bouquets-6x2.jpg'
   }
 ];
