@@ -38,9 +38,16 @@ function Hero() {
         <div className="animate-rise relative min-w-0" style={{ animationDelay: '150ms' }}>
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] bg-[var(--muted)] shadow-2xl group">
             {trendingProducts.length > 0 ? (
-              <Swiper modules={[Autoplay, Pagination]} autoplay={{ delay: 3500, disableOnInteraction: false }} pagination={{ clickable: true, dynamicBullets: true }} className="h-full w-full">
+              <Swiper 
+                modules={[Autoplay, Pagination]} 
+                autoplay={{ delay: 3500, disableOnInteraction: false }} 
+                pagination={{ clickable: true, dynamicBullets: true }} 
+                slidesPerView={1} 
+                spaceBetween={0}
+                className="h-full w-full overflow-hidden"
+              >
                 {trendingProducts.map((p) => (
-                  <SwiperSlide key={p.id} className="relative h-full w-full cursor-pointer" onClick={() => selectProduct(p)}>
+                  <SwiperSlide key={p.id} className="relative h-full w-full cursor-pointer overflow-hidden" onClick={() => selectProduct(p)}>
                     <img src={p.image || p.images?.[0]} alt={p.name} className="h-full w-full object-cover transition-transform duration-[4000ms] group-hover:scale-105" onError={hideBrokenImage} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
                     <div className="absolute bottom-16 left-6 right-6 z-10 text-left">
@@ -116,7 +123,6 @@ function ProductGallery() {
   const [filter, setFilter] = useState('all');
   const activeIndex = filters.findIndex((f) => f.value === filter);
   
-  // DYNAMIC PRODUCTS FROM GLOBAL STORE
   const { products } = useStore();
   const automotiveProducts = products.filter((p) => p.type === 'cars');
   const hamperProducts = products.filter((p) => p.type === 'hampers');
@@ -240,7 +246,7 @@ function ReviewForm() {
 
 function ReviewsSection() {
   const { reviews } = useStore();
-  const average = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+  const average = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 5;
 
   return (
     <section id="reviews" className="mx-auto max-w-6xl scroll-mt-28 px-4 py-20 sm:px-6">
