@@ -3,7 +3,8 @@ import { Lock, LoaderCircle, Package, BarChart3, Clock, PlusCircle, FileImage, B
 import { useStore } from '../store/store.jsx';
 import { formatINR } from '../data.js';
 
-const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
+// Enhanced check to safely catch both localhost and local IP addresses
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
 
 function Eyebrow({ children }) {
   return (
@@ -217,7 +218,7 @@ export default function AdminView() {
         </div>
       )}
 
-      {/* TAB 2: MANAGE CATALOG (EDIT/DELETE ADDED) */}
+      {/* TAB 2: MANAGE CATALOG */}
       {adminTab === 'products' && (
         <div className="animate-fade space-y-8">
           

@@ -1,7 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { seedReviews, products as localProducts } from '../data.js';
 
-const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
+// Enhanced check to safely catch both localhost and local IP addresses for live production
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : '';
 const emptyCustomization = { occasion: '', text: '', note: '', photoUrl: null, photoName: null };
 
 export const StoreContext = createContext(null);
