@@ -38,12 +38,25 @@ export default function AdminView() {
   const handleLogin = async (e) => {
     e.preventDefault(); setError(false); setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/admin/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) });
+      // Updated the fetch URL to point to the correct auth router path
+      const res = await fetch(`${API_BASE}/api/auth/login`, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ password }) 
+      });
       const data = await res.json();
-      if (data.success) { setToken(data.token); pushToast({ kind: 'success', title: 'Access Granted', body: 'Welcome to the super admin dashboard.' }); } 
-      else { setError(true); }
-    } catch (err) { setError(true); pushToast({ kind: 'error', title: 'Connection Error', body: 'Failed to reach Floweraaine servers.' }); } 
-    finally { setLoading(false); }
+      if (data.success) { 
+        setToken(data.token); 
+        pushToast({ kind: 'success', title: 'Access Granted', body: 'Welcome to the super admin dashboard.' }); 
+      } else { 
+        setError(true); 
+      }
+    } catch (err) { 
+      setError(true); 
+      pushToast({ kind: 'error', title: 'Connection Error', body: 'Failed to reach Floweraaine servers.' }); 
+    } finally { 
+      setLoading(false); 
+    }
   };
 
   useEffect(() => {
