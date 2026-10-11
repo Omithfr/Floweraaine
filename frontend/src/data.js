@@ -93,7 +93,7 @@ export const products = [
     type: 'cars',
     features: ['Die-cast Dodge Charger', 'Custom backing', 'Wall-mountable'],
     isTrending: false,
-    image: '/product-images/dodge-charger-car.jpg'
+    image: '/product-images/dodge-charger-car.jpg' // FIXED
   },
   {
     id: 'p-3',
@@ -183,7 +183,7 @@ export const products = [
     type: 'hampers',
     features: ['Centerpiece frame included', 'Bespoke gifts', 'Large format box'],
     isTrending: false,
-    image: '/product-images/custom-hamper-defender-frame.jpg.jpg'
+    image: '/product-images/custom-hamper-defender-frame.jpg.jpg' // FIXED
   },
 
   // --- ARTISAN FLORALS ---
@@ -196,7 +196,7 @@ export const products = [
     type: 'floral',
     features: ['6 handmade flowers', 'Scent-infused', 'Premium wrapping'],
     isTrending: false,
-    image: '/product-images/scented-flower-bouquet-6.jpg'
+    image: '/product-images/scented-flower-bouquet-6.jpg' // FIXED
   },
   {
     id: 'p-12',
@@ -218,6 +218,6 @@ export const products = [
     type: 'floral',
     features: ['12 handmade flowers', 'Dual arrangement', 'Extravagant presentation'],
     isTrending: false,
-    image: '/product-images/scented-flower-bouquets-6x2.jpg'
+    image: '/product-images/scented-flower-bouquets-6x2.jpg' // FIXED
   }
 ];
