@@ -1,34 +1,43 @@
 import express from 'express';
 import Order from '../models/Order.js';
-import productRoutes from './routes/productRoutes.js';
 
 const router = express.Router();
 
-// POST: Submit a new order from the Checkout page
+// 1. POST: Create a new order (Streamlined Checkout)
 router.post('/', async (req, res) => {
   try {
-    const newOrder = new Order(req.body);
-    const savedOrder = await newOrder.save();
-    res.status(201).json({ success: true, order: savedOrder });
-  } catch (error) {
-    console.error("Order Creation Error:", error);
-    res.status(500).json({ success: false, message: 'Failed to create order', error: error.message });
+    const newOrder = new Order({ ...req.body, status: 'pending' });
+    await newOrder.save();
+    res.json({ success: true, order: newOrder });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// GET: Fetch all orders for the Admin Dashboard
+// 2. GET: Fetch orders for a specific customer
+router.get('/my-orders', async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) return res.status(400).json({ success: false, message: 'User email is required' });
+    
+    const orders = await Order.find({ 'customer.email': email }).sort({ createdAt: -1 });
+    res.json({ success: true, orders });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// 3. GET: Fetch ALL orders (Super Admin Dashboard)
 router.get('/', async (req, res) => {
   try {
-    // Fetches all orders, sorted by newest first
-    const orders = await Order.find().sort({ createdAt: -1 }); 
-    res.status(200).json(orders);
-  } catch (error) {
-    console.error("Fetch Orders Error:", error);
-    res.status(500).json({ success: false, message: 'Failed to fetch orders', error: error.message });
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.json(orders); 
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// PATCH: Approve an order from the Admin Dashboard
+// 4. PATCH: Approve an order (Super Admin Dashboard)
 router.patch('/:id/approve', async (req, res) => {
   try {
     const updatedOrder = await Order.findOneAndUpdate(
@@ -36,9 +45,11 @@ router.patch('/:id/approve', async (req, res) => {
       { status: 'verified' },
       { new: true }
     );
-    res.status(200).json({ success: true, order: updatedOrder });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to approve order', error: error.message });
+    
+    if (!updatedOrder) return res.status(404).json({ success: false, message: 'Order not found' });
+    res.json({ success: true, order: updatedOrder });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
