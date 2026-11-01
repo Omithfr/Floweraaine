@@ -25,15 +25,15 @@ export function mailtoLink(subject, body) {
   return `mailto:floweraaine@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-// STORE METADATA CONFIGURATION
+
 export const STORE = {
   name: 'Floweraaine',
   tagline: 'Pieces made to be remembered.',
   phone: '+91 97450 82273',
-  whatsapp: '919745082273',
+  whatsapp: '9745082273',
   email: 'floweraaine@gmail.com',
   location: 'Kerala & Mumbai',
-  upiId: '9745082273@upi' // <-- UPDATE THIS to your exact bank UPI ID
+  upiId: '7306238385@upi'
 };
 
 // OCCASIONS FOR CUSTOMIZATION
